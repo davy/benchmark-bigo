@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+require 'benchmark/ips'
+require 'benchmark/bigo'
+
+report = Benchmark.bigo do |x|
+
+  # increments is the total number of data points to collect
+  # logscale indicates that the incrementor generates sizes
+  # that increase logarithmically instead of linearly
+  x.config increments: 6,
+           logscale: true
+
+  # parameters can also be configured thusly:
+  x.increments = 6
+  x.logscale = true
+
+  # generator should construct a test object of the given size
+  x.generator {|size| Array.new(size) {|i| i}.shuffle }
+
+  # incrementor always starts at i=1 and ends at i=increments
+  # incrementor generates the sizes of the desired test objects
+  # in this example the increments increase logarithmically
+  x.incrementor {|i| 10**i }
+
+  # report takes a label and a block. 
+  # block is passed in the generated object and the size of that object
+  x.report("at") {|generated, size| generated.at rand(size) }
+  x.report("index") {|generated, size| generated.index rand(size) }
+
+end
+
+# vim: syntax=ruby
