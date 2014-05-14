@@ -7,6 +7,11 @@ module Benchmark
     def initialize
       @per_iterations = 0
       @list = {}
+      @logscale = false
+    end
+
+    def logscale?
+      @logscale
     end
 
     def logscale!
