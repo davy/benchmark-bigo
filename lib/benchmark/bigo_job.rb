@@ -60,6 +60,12 @@ module Benchmark
       raise ArgumentError, "no block" unless @incrementor
     end
 
+    def sizes
+      (1..@increments).collect do |idx|
+        @incrementor.call(idx)
+      end
+    end
+
     def item label="", str=nil, &blk # :yield:
       if blk and str
         raise ArgumentError, "specify a block and a str, but not both"
@@ -68,16 +74,11 @@ module Benchmark
       action = str || blk
       raise ArgumentError, "no block or string" unless action
 
-      idx = 1
-      while idx <= @increments
-
-        size = @incrementor.call(idx)
+      for size in sizes
         generated = @generator.call(size)
 
-        label_idx = "#{label} #{size}"
-        @list.push Entry.new(label_idx, action, generated, size)
-
-        idx += 1
+        label_size = "#{label} #{size}"
+        @list.push Entry.new(label_size, action, generated, size)
       end
 
       self
