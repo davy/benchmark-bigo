@@ -32,7 +32,14 @@ module Benchmark
 
     end
 
+    include Chartkick::Helper
+
     attr_accessor :increments, :logscale
+
+    # whether to generate a chart of the results
+    # if nil, do not generate chart
+    # else string is name of file to write chart out to
+    attr_reader :chart
 
     def initialize opts={}
       super
@@ -44,12 +51,27 @@ module Benchmark
       # defaults
       @increments = 5
       @logscale = false
+      @chart = nil
     end
 
     def config opts
       super
       @increments = opts[:increments] if opts[:increments]
       @logscale = opts[:logscale] if opts[:logscale]
+      @reports.logscale! if @logscale
+    end
+
+    def chart?
+      @chart
+    end
+
+    def chart! filename='chart.html'
+      @chart = filename
+    end
+
+    def logscale= val
+      @logscale = val
+      @reports.logscale! if @logscale
     end
 
     def generator &blk
@@ -92,6 +114,18 @@ module Benchmark
 
       max_timing = @timing.values.max
       @reports.per_iterations = 10**Math.log10(max_timing).ceil
+    end
+
+    def generate_chart
+      return if @chart.nil?
+
+      data = @reports.chart_data
+      template = ERB.new(File.read('lib/benchmark/chart.erb'))
+
+      File.open @chart, 'w' do |f|
+        f.write template.result(binding)
+      end
+
     end
 
   end

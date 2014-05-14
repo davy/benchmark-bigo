@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'erb'
+require 'chartkick'
 require 'benchmark/bigo_report'
 require 'benchmark/bigo_job'
 
@@ -31,6 +33,10 @@ module Benchmark
       $stdout.puts "-------------------------------------------------" unless quiet
 
       job.run
+
+      if job.chart?
+        job.generate_chart
+      end
 
       $stdout.sync = sync
 

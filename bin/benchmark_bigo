@@ -28,6 +28,8 @@ report = Benchmark.bigo do |x|
   x.report("at") {|generated, size| generated.at rand(size) }
   x.report("index") {|generated, size| generated.index rand(size) }
 
+  x.chart! 'chart.html'
+
 end
 
 # vim: syntax=ruby
