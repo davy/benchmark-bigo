@@ -86,7 +86,7 @@ module Benchmark
 
     def sizes
       (1..@increments).collect do |idx|
-        @incrementor.call(idx)
+        @incrementor.call(idx).to_i
       end
     end
 
