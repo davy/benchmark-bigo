@@ -32,26 +32,20 @@ module Benchmark
 
     end
 
-    attr_reader :list
     attr_accessor :increments, :logscale
 
     def initialize opts={}
       super
-      @suite = opts[:suite] || nil
-      @quiet = opts[:quiet] || false
       @generator = nil
       @incrementor = nil
-      @report = nil
-      @list = []
 
       # defaults
-      @warmup = 2
-      @time = 5
       @increments = 5
       @logscale = false
     end
 
     def config opts
+      super
       @increments = opts[:increments] if opts[:increments]
       @logscale = opts[:logscale] if opts[:logscale]
     end
