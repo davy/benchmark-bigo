@@ -4,3 +4,4 @@ README.md
 Rakefile
 bin/benchmark_bigo
 lib/benchmark/bigo.rb
+lib/benchmark/bigo_job.rb
