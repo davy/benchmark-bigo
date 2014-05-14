@@ -39,6 +39,8 @@ module Benchmark
       @generator = nil
       @incrementor = nil
 
+      @reports = BigOReportList.new
+
       # defaults
       @increments = 5
       @logscale = false
@@ -84,6 +86,13 @@ module Benchmark
       self
     end
     alias_method :report, :item
+
+    def run_warmup
+      super
+
+      max_timing = @timing.values.max
+      @reports.per_iterations = 10**Math.log10(max_timing).ceil
+    end
 
   end
 end

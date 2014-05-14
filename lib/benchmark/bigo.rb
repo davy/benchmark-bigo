@@ -1,4 +1,5 @@
 # encoding: utf-8
+require 'benchmark/bigo_report'
 require 'benchmark/bigo_job'
 
 module Benchmark
