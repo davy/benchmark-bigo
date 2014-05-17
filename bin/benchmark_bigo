@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'benchmark/ips'
 require 'benchmark/bigo'
 
 report = Benchmark.bigo do |x|

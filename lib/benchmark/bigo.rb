@@ -1,6 +1,7 @@
 # encoding: utf-8
 require 'erb'
 require 'chartkick'
+require 'benchmark/ips'
 require 'benchmark/bigo_report'
 require 'benchmark/bigo_job'
 
