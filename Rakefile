@@ -3,6 +3,8 @@
 require "rubygems"
 require "hoe"
 
+Hoe.plugin :minitest
+
 Hoe.spec "benchmark-bigo" do
 
   developer("Davy Stevenson", "davy.stevenson@gmail.com")
