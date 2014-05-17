@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/davy/benchmark-bigo.png)](http://travis-ci.org/davy/benchmark-bigo)
+
 # benchmark-bigo
 
 * http://github.com/davy/benchmark-bigo
