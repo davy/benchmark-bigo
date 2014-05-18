@@ -6,15 +6,12 @@
     <script src="http://chartkick.com/chartkick.js"></script>
   </head>
   <body>
-  <% chart_opts = {discrete: true,
-                   width: "800px",
-                   height: "500px"
-                   }
-  %>
 
-  <h1>Growth Chart</h1>
+  <% for chart in charts %>
+    <h1><%= chart[:name] %></h1>
 
-  <%= line_chart data, chart_opts %>
+    <%= line_chart chart[:data], chart[:opts] %>
+  <% end %>
   </body>
 </html>
 

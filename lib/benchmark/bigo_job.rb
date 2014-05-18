@@ -119,7 +119,19 @@ module Benchmark
     def generate_chart
       return if @chart.nil?
 
-      data = @reports.chart_data
+      all_data = @reports.chart_data
+
+      charts = []
+      charts << { name: 'Growth Chart', data: all_data, opts: @reports.chart_opts(all_data) }
+
+      if compare?
+        all_sizes = sizes
+        for chart_data in all_data
+          comparison_data = @reports.comparison_chart_data chart_data, all_sizes
+          charts << { name: chart_data[:name], data: comparison_data, opts: @reports.chart_opts(chart_data) }
+        end
+      end
+
       template = ERB.new(File.read('lib/benchmark/chart.erb'))
 
       File.open @chart, 'w' do |f|
