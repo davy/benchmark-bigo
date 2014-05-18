@@ -17,7 +17,7 @@ require 'benchmark/bigo'
 report = Benchmark.bigo do |x|
 
   # increments is the total number of data points to collect
-  # logscale indicates that the incrementor generates sizes
+  # logscale indicates that the incrementer generates sizes
   # that increase logarithmically instead of linearly
   x.config increments: 6,
            logscale: true
@@ -32,14 +32,14 @@ report = Benchmark.bigo do |x|
   # example of an Array generator
   x.generator {|size| (0...size).to_a.shuffle }
 
-  # incrementor always starts at i=1 and ends at i=increments
-  # incrementor generates the sizes of the desired test objects
+  # incrementer always starts at i=1 and ends at i=increments
+  # incrementer generates the sizes of the desired test objects
   #
-  # example of a logarithmic incrementor
-  x.incrementor {|i| 10**i }
+  # example of a logarithmic incrementer
+  x.incrementer {|i| 10**i }
 
-  # example of a linear incrementor
-  # x.incrementor {|i| 1000*i }
+  # example of a linear incrementer
+  # x.incrementer {|i| 1000*i }
 
   # report takes a label and a block.
   # block is passed in the generated object and the size of that object

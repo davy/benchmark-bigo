@@ -44,7 +44,7 @@ module Benchmark
     def initialize opts={}
       super
       @generator = nil
-      @incrementor = nil
+      @incrementer = nil
 
       @reports = BigOReportList.new
 
@@ -79,14 +79,14 @@ module Benchmark
       raise ArgumentError, "no block" unless @generator
     end
 
-    def incrementor &blk
-      @incrementor = blk
-      raise ArgumentError, "no block" unless @incrementor
+    def incrementer &blk
+      @incrementer = blk
+      raise ArgumentError, "no block" unless @incrementer
     end
 
     def sizes
       (1..@increments).collect do |idx|
-        @incrementor.call(idx).to_i
+        @incrementer.call(idx).to_i
       end
     end
 
