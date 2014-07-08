@@ -35,7 +35,11 @@ module Benchmark
 
       include Chartkick::Helper
 
-      attr_accessor :increments, :logscale
+      # how many total increments are being measured
+      attr_accessor :increments
+
+      # whether to graph the results on a log scale
+      attr_accessor :logscale
 
       # whether to generate a chart of the results
       # if nil, do not generate chart
@@ -44,10 +48,11 @@ module Benchmark
 
       def initialize opts={}
         super
+
         @generator = nil
         @incrementer = nil
 
-        @reports = Report.new
+        @full_report = Report.new
 
         # defaults
         @increments = 5
@@ -59,7 +64,7 @@ module Benchmark
         super
         @increments = opts[:increments] if opts[:increments]
         @logscale = opts[:logscale] if opts[:logscale]
-        @reports.logscale! if @logscale
+        @full_report.logscale! if @logscale
       end
 
       def chart?
@@ -72,7 +77,7 @@ module Benchmark
 
       def logscale= val
         @logscale = val
-        @reports.logscale! if @logscale
+        @full_report.logscale! if @logscale
       end
 
       def generator &blk
@@ -114,22 +119,22 @@ module Benchmark
         super
 
         max_timing = @timing.values.max
-        @reports.per_iterations = 10**Math.log10(max_timing).ceil
+        @full_report.per_iterations = 10**Math.log10(max_timing).ceil
       end
 
       def generate_chart
         return if @chart.nil?
 
-        all_data = @reports.chart_data
+        all_data = @full_report.chart_data
 
         charts = []
-        charts << { name: 'Growth Chart', data: all_data, opts: @reports.chart_opts(all_data) }
+        charts << { name: 'Growth Chart', data: all_data, opts: @full_report.chart_opts(all_data) }
 
         if compare?
           all_sizes = sizes
           for chart_data in all_data
-            comparison_data = @reports.comparison_chart_data chart_data, all_sizes
-            charts << { name: chart_data[:name], data: comparison_data, opts: @reports.chart_opts(chart_data) }
+            comparison_data = @full_report.comparison_chart_data chart_data, all_sizes
+            charts << { name: chart_data[:name], data: comparison_data, opts: @full_report.chart_opts(chart_data) }
           end
         end
 

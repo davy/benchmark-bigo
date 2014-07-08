@@ -41,7 +41,7 @@ module Benchmark
 
       $stdout.sync = sync
 
-      return job.reports
+      return job.full_report
     end
   end
 
