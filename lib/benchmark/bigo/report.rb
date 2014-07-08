@@ -1,13 +1,14 @@
 module Benchmark
 
   module BigO
-    class Report < IPS::Report
+    class Report
 
       attr_accessor :per_iterations
+      attr_reader :entries
 
       def initialize
         @per_iterations = 0
-        @list = {}
+        @entries = {}
         @logscale = false
       end
 
@@ -22,9 +23,9 @@ module Benchmark
       def add_entry label, microseconds, iters, ips, ips_sd, measurement_cycle
         group_label = label.split(' ').first
 
-        @list[group_label] ||= []
-        @list[group_label] << Benchmark::IPS::Report.new(label, microseconds, iters, ips, ips_sd, measurement_cycle)
-        @list[group_label].last
+        @entries[group_label] ||= []
+        @entries[group_label] << Benchmark::IPS::Report::Entry.new(label, microseconds, iters, ips, ips_sd, measurement_cycle)
+        @entries[group_label].last
       end
 
       def scaled_iterations
@@ -32,12 +33,12 @@ module Benchmark
       end
 
       def chart_hash group_label
-        @list[group_label].collect do |report|
+        @entries[group_label].collect do |report|
           size = report.label.split(' ').last.to_i
           seconds_per_scaled_iters = scaled_iterations / report.ips.to_f
 
           {label: size,
-           seconds_per_scaled_iters:  seconds_per_scaled_iters,
+           seconds_per_scaled_iters: seconds_per_scaled_iters,
            ips: report.ips
           }
         end
@@ -49,7 +50,7 @@ module Benchmark
       end
 
       def chart_data
-        @list.keys.map do |k|
+        @entries.keys.map do |k|
           data = chart_for k
           {name: k, data: data }
         end
