@@ -8,12 +8,12 @@ report = Benchmark.bigo do |x|
   # logscale indicates that the incrementer generates sizes
   # that increase logarithmically instead of linearly
   x.config increments: 6,
-           logscale: true
+           logscale: false
 
 
   # parameters can also be configured thusly:
   x.increments = 6
-  x.logscale = true
+  x.logscale = false
 
   # generator should construct a test object of the given size
   #
@@ -23,36 +23,20 @@ report = Benchmark.bigo do |x|
   # incrementer always starts at i=1 and ends at i=increments
   # incrementer generates the sizes of the desired test objects
   #
-  # example of a logarithmic incrementer
-  x.incrementer {|i| 10**i }
-
   # example of a linear incrementer
-  # x.incrementer {|i| 1000*i }
+   x.incrementer {|i| 1000*i }
 
-  # report takes a label and a block. 
+  # report takes a label and a block.
   # block is passed in the generated object and the size of that object
   x.report("#at") {|generated, size| generated.at rand(size) }
   x.report("#index") {|generated, size| generated.index rand(size) }
   x.report("#map") {|generated, size| generated.map {|x| x/2 } }
 
-  # other example reports
-  #x.report("#<<") {|generated, size| generated.dup << rand(size) }
-  #x.report("#add") {|generated, size| g = generated.dup; g += [rand(size)] }
-  #x.report("#zip") {|generated, size| generated.zip(generated)}
-  #x.report("#zip-flatten") {|generated, size| generated.zip(generated).flatten  }
-  #x.report("#map-map") {|generated, size|
-  #  generated.map {|x|
-  #    generated.map {|y| [x,y] }
-  #  }
-  #}
-
   # display results graphically using ChartKick in chart.html
-  x.chart! 'chart.html'
+  x.chart! 'chart_array_simple.html'
 
   # for each report, create a comparison chart showing the report
   # and scaled series for O(log n), O(n), O(n log n), and O(n squared)
   x.compare!
 
 end
-
-# vim: syntax=ruby
