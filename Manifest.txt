@@ -3,6 +3,6 @@ Manifest.txt
 README.md
 Rakefile
 lib/benchmark/bigo.rb
-lib/benchmark/bigo_report.rb
-lib/benchmark/bigo_job.rb
+lib/benchmark/bigo/report.rb
+lib/benchmark/bigo/job.rb
 lib/benchmark/chart.erb

@@ -2,13 +2,13 @@
 require 'erb'
 require 'chartkick'
 require 'benchmark/ips'
-require 'benchmark/bigo_report'
-require 'benchmark/bigo_job'
+require 'benchmark/bigo/report'
+require 'benchmark/bigo/job'
 
 module Benchmark
 
   module BigO
-    VERSION = "0.9.0"
+    VERSION = "0.0.1"
 
     def bigo
       suite = nil
@@ -21,8 +21,8 @@ module Benchmark
 
       quiet = suite && !suite.quiet?
 
-      job = BigOJob.new({:suite => suite,
-                         :quiet => quiet
+      job = Job.new({:suite => suite,
+                     :quiet => quiet
       })
 
       yield job
