@@ -1,8 +1,8 @@
 module Benchmark
 
-  class BigOJob < Benchmark::IPSJob
+  class BigOJob < IPS::Job
 
-    class Entry < Benchmark::IPSJob::Entry
+    class Entry < IPS::Job::Entry
 
       def initialize label, action, generated, size
         super label, action
@@ -46,7 +46,7 @@ module Benchmark
       @generator = nil
       @incrementer = nil
 
-      @reports = BigOReportList.new
+      @reports = BigOReport.new
 
       # defaults
       @increments = 5

@@ -1,6 +1,6 @@
 module Benchmark
 
-  class BigOReportList < IPSReportList
+  class BigOReport < IPS::Report
 
     attr_accessor :per_iterations
 
