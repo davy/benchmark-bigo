@@ -36,8 +36,8 @@ report = Benchmark.bigo do |x|
   x.report("#map") {|generated, size| generated.map {|x| x/2 } }
 
   # other example reports
-  #x.report("#<<") {|generated, size| generated = generated << rand(size) }
-  #x.report("#add") {|generated, size| generated += [rand(size)] }
+  #x.report("#<<") {|generated, size| generated.dup << rand(size) }
+  #x.report("#add") {|generated, size| g = generated.dup; g += [rand(size)] }
   #x.report("#zip") {|generated, size| generated.zip(generated)}
   #x.report("#zip-flatten") {|generated, size| generated.zip(generated).flatten  }
   #x.report("#map-map") {|generated, size|
