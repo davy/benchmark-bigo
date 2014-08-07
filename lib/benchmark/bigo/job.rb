@@ -49,12 +49,11 @@ module Benchmark
       def initialize opts={}
         super
 
-        @generator = nil
-        @incrementer = nil
-
         @full_report = Report.new
+        @generator = nil
 
         # defaults
+        linear
         @increments = 5
         @logscale = false
         @chart = nil
@@ -85,9 +84,23 @@ module Benchmark
         raise ArgumentError, "no block" unless @generator
       end
 
+      # custom incrementer
       def incrementer &blk
         @incrementer = blk
         raise ArgumentError, "no block" unless @incrementer
+      end
+
+      # linear incrementer
+      def linear increments=100
+        @incrementer = Proc.new {|i| i * increments }
+        @logscale = false
+      end
+
+      # logarithmic incrementer
+      def logarithmic base=2
+        @incrementer = Proc.new {|i| base ** (i-1) }
+        @full_report.logscale!
+        @logscale = true
       end
 
       def sizes
