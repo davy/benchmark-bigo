@@ -12,8 +12,8 @@ report = Benchmark.bigo do |x|
   x.generator {|size| (0...size).to_a.shuffle }
 
   # specifies how the size of the object should grow
-  #   options: linear, logarithmic
-  x.logarithmic
+  #   options: linear, exponential
+  x.exponential
 
   # report takes a label and a block.
   # block is passed in the generated object and the size of that object

@@ -35,7 +35,7 @@ report = Benchmark.bigo do |x|
   # x.generate :array
 
   # specifies how the size of the object should grow
-  #   options: linear, logarithmic
+  #   options: linear, exponential
   #
   # specifies that arrays should grow linearly by 1000
   x.linear 1000

@@ -125,8 +125,8 @@ module Benchmark
         @logscale = false
       end
 
-      # logarithmic incrementer
-      def logarithmic base=10
+      # exponential incrementer
+      def exponential base=10
         @incrementer = Proc.new {|i| base ** (i-1) }
         @full_report.logscale!
         @logscale = true
