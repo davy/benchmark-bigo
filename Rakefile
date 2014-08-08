@@ -1,21 +1,9 @@
-# -*- ruby -*-
+require 'rake/testtask'
 
-require "rubygems"
-require "hoe"
-
-Hoe.plugin :minitest
-Hoe.plugin :gemspec
-
-Hoe.spec "benchmark-bigo" do
-
-  developer("Davy Stevenson", "davy.stevenson@gmail.com")
-
-  extra_deps << ["benchmark-ips", '~> 2.0']
-  extra_deps << ["chartkick", '~> 1.2', '>= 1.2.4']
-
-  self.readme_file = 'README.md'
-
-  license "MIT" # this should match the license in the README
+Rake::TestTask.new do |t|
+  t.libs << 'test'
+  t.test_files = FileList['test/**/test_*.rb']
+  t.verbose = true
 end
 
-# vim: syntax=ruby
+task default: :test

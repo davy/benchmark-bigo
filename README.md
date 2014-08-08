@@ -2,20 +2,28 @@
 
 # benchmark-bigo
 
-* http://github.com/davy/benchmark-bigo
-
-## DESCRIPTION:
-
 Benchmark objects to help calculate Big O behavior
 
-## SYNOPSIS:
+## Installation
+
+In your application's Gemfile:
+
+```ruby
+gem 'benchmark-bigo'
+```
+
+Or installit manually:
+
+```sh
+$ gem install benchmark-bigo
+```
+
+## Usage
 
 ```ruby
 require 'benchmark/bigo'
 
 report = Benchmark.bigo do |x|
-
-
   # increments is the total number of data points to collect
   x.increments = 6
 
@@ -44,28 +52,27 @@ report = Benchmark.bigo do |x|
   # for each report, create a comparison chart showing the report
   # and scaled series for O(log n), O(n), O(n log n), and O(n squared)
   x.compare!
-
 end
 ```
 
-## REQUIREMENTS:
+## Contributing
 
-* benchmark-ips (http://github.com/evanphx/benchmark-ips)
+After checking out the source, run the tests:
 
-## INSTALL:
+```
+$ git clone git@github.com:davy/benchmark-bigo.git
+$ cd benchmark-bigo
+$ bundle install
+$ bundle exec rake test
+```
 
-    $ gem install benchmark-bigo
+You can also generate RDoc:
 
-## DEVELOPERS:
+```
+$ bundle exec rdoc --main README.md
+```
 
-After checking out the source, run:
-
-    $ rake newb
-
-This task will install any missing dependencies, run the tests/specs,
-and generate the RDoc.
-
-## LICENSE:
+## License
 
 (The MIT License)
 

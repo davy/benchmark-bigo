@@ -8,8 +8,6 @@ require 'benchmark/bigo/job'
 module Benchmark
 
   module BigO
-    VERSION = "0.0.1"
-
     def bigo
       suite = nil
 
