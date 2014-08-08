@@ -35,6 +35,10 @@ module Benchmark
 
       job.run
 
+      if job.data?
+        job.generate_data
+      end
+
       if job.chart?
         job.generate_chart
       end

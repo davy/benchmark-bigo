@@ -57,6 +57,7 @@ module Benchmark
         @increments = 5
         @logscale = false
         @chart = nil
+        @data_file = nil
       end
 
       def config opts
@@ -72,6 +73,14 @@ module Benchmark
 
       def chart! filename='chart.html'
         @chart = filename
+      end
+
+      def data?
+        @data_file
+      end
+
+      def data! filename='data.json'
+        @data_file = filename
       end
 
       def logscale= val
@@ -153,6 +162,16 @@ module Benchmark
 
         max_timing = @timing.values.max
         @full_report.per_iterations = 10**Math.log10(max_timing).ceil
+      end
+
+      def generate_data
+        return if @data_file.nil?
+
+        all_data = @full_report.chart_data
+
+        File.open @data_file, 'w' do |f|
+          f.write JSON.pretty_generate(all_data)
+        end
       end
 
       def generate_chart
