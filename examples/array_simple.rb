@@ -23,6 +23,9 @@ report = Benchmark.bigo do |x|
   x.report("#index") {|generated, size| generated.index rand(size) }
   x.report("#empty-index") {|generated, size| generated.index 'foo' }
 
+  # save results in JSON format
+  x.data! 'chart_array_simple.json'
+
   # generate HTML chart using ChartKick
   x.chart! 'chart_array_simple.html'
 
