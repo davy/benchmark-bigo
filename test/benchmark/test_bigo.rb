@@ -88,6 +88,35 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_in_delta 4.0, rep[0].ips, 0.2
   end
 
+  def test_charts
+    report = Benchmark.bigo do |x|
+      x.config(:time => 1, :warmup => 1, :increments => 2)
+      x.generate :array
+      x.report("sleep") { |a,b| sleep(0.25) }
+      x.chart! 'test_generated_chart.html'
+      x.compare!
+    end
+
+    file_name = './test_generated_chart.html'
+    assert File.exists?(file_name), "should create #{file_name}"
+
+    File.delete(file_name)
+  end
+
+  def test_data
+    report = Benchmark.bigo do |x|
+      x.config(:time => 1, :warmup => 1, :increments => 2)
+      x.generate :array
+      x.report("sleep") { |a,b| sleep(0.25) }
+      x.data! 'test_generated_data.json'
+    end
+
+    file_name = './test_generated_data.json'
+    assert File.exists?(file_name), "should create #{file_name}"
+
+    File.delete(file_name)
+  end
+
   def test_bigo_logarithmic
     report = Benchmark.bigo do |x|
       x.config(:time => 1, :warmup => 1, :increments => 2)
