@@ -81,7 +81,27 @@ module Benchmark
 
       def generator &blk
         @generator = blk
+
         raise ArgumentError, "no block" unless @generator
+      end
+
+
+      # use a generator that creates a randomized object
+      # represented by the symbol passed to the method
+      def generate sym
+
+        case sym
+
+        # generates an Array containing shuffled integer values from 0 to size
+        when :array
+          @generator = Proc.new{|size| (0...size).to_a.shuffle }
+
+        # when :string
+          # to do
+
+        else
+          raise "#{sym} is not a supported object type"
+        end
       end
 
       # custom incrementer
