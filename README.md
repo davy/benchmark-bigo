@@ -12,7 +12,7 @@ In your application's Gemfile:
 gem 'benchmark-bigo'
 ```
 
-Or installit manually:
+Or install it manually:
 
 ```sh
 $ gem install benchmark-bigo
@@ -30,6 +30,9 @@ report = Benchmark.bigo do |x|
   # generator should construct a test object of the given size
   # example of an Array generator
   x.generator {|size| (0...size).to_a.shuffle }
+
+  # or you can use the built in array generator
+  # x.generate :array
 
   # specifies how the size of the object should grow
   #   options: linear, logarithmic
