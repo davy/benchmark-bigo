@@ -4,6 +4,7 @@ require "rubygems"
 require "hoe"
 
 Hoe.plugin :minitest
+Hoe.plugin :gemspec
 
 Hoe.spec "benchmark-bigo" do
 
