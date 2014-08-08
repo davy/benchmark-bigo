@@ -8,14 +8,11 @@ report = Benchmark.bigo do |x|
   x.config increments: 4
 
   # generator should construct a test object of the given size
-  #
   # example of an Array generator
   x.generator {|size| (0...size).to_a.shuffle }
 
-  # incrementer always starts at i=1 and ends at i=increments
-  # incrementer generates the sizes of the desired test objects
-  #
-  # example of a logarithmic incrementer
+  # specifies how the size of the object should grow
+  #   options: linear, logarithmic
   x.logarithmic
 
   # report takes a label and a block.
@@ -24,13 +21,11 @@ report = Benchmark.bigo do |x|
   x.report("#add") {|generated, size| g = generated.dup; g += [rand(size)] }
   x.report("#zip") {|generated, size| generated.zip(generated)}
   x.report("#zip-flatten") {|generated, size| generated.zip(generated).flatten  }
-  x.report("#map-map") {|generated, size|
-    generated.map {|x|
-      generated.map {|y| [x,y] }
-    }
-  }
 
-  # display results graphically using ChartKick in chart.html
+  # save results in JSON format
+  x.data! 'chart_array_complex.json'
+
+  # generate HTML chart using ChartKick
   x.chart! 'chart_array_complex.html'
 
   # for each report, create a comparison chart showing the report

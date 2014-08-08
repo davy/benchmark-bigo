@@ -4,10 +4,8 @@ require 'benchmark/bigo'
 
 report = Benchmark.bigo do |x|
 
-  # generator should construct a test object of the given size
-  #
-  # example of an Array generator
-  x.generator {|size| (0...size).to_a.shuffle }
+  # use built-in random Array generator
+  x.generate(:array)
 
   # report takes a label and a block.
   # block is passed in the generated object and the size of that object
