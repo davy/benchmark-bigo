@@ -190,7 +190,7 @@ module Benchmark
           end
         end
 
-        template_file = File.join File.dirname(__FILE__), 'chart.erb'
+        template_file = File.join File.dirname(__FILE__), 'templates/chart.erb'
         template = ERB.new(File.read(template_file))
 
         File.open @chart, 'w' do |f|

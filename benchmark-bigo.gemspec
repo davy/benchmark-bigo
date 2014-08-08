@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.description = 'Benchmark objects to help calculate Big O behavior'
 
   s.require_paths    = ['lib']
-  s.files            = Dir['lib/**/*.rb']
+  s.files            = Dir['lib/**/*.rb'] | Dir['lib/**/templates/*.erb']
   s.extra_rdoc_files = ['README.md']
   s.rdoc_options     = ['--main', 'README.md']
   s.test_files       = Dir['test/**/*.rb']
