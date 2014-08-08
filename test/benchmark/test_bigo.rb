@@ -2,6 +2,14 @@ require "minitest/autorun"
 require "benchmark/bigo"
 
 class TestBenchmarkBigo < MiniTest::Test
+  def setup
+    @old_stdout = $stdout
+    $stdout = StringIO.new
+  end
+
+  def teardown
+    $stdout = @old_stdout
+  end
 
   def test_bigo
     report = Benchmark.bigo do |x|
