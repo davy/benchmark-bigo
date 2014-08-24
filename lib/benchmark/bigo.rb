@@ -33,18 +33,7 @@ module Benchmark
       $stdout.puts "-------------------------------------------------" unless quiet
 
       job.run
-
-      if job.data?
-        job.generate_data
-      end
-
-      if job.csv?
-        job.generate_csv
-      end
-
-      if job.chart?
-        job.generate_chart
-      end
+      job.generate_output
 
       $stdout.sync = sync
 

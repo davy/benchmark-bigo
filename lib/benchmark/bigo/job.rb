@@ -68,24 +68,12 @@ module Benchmark
         @full_report.logscale! if @logscale
       end
 
-      def chart?
-        @chart
-      end
-
       def chart! filename='chart.html'
         @chart = filename
       end
 
-      def data?
-        @data_file
-      end
-
       def data! filename='data.json'
         @data_file = filename
-      end
-
-      def csv?
-        @csv_file
       end
 
       def csv! filename='data.csv'
@@ -171,6 +159,12 @@ module Benchmark
 
         max_timing = @timing.values.max
         @full_report.per_iterations = 10**Math.log10(max_timing).ceil
+      end
+
+      def generate_output
+        generate_data
+        generate_csv
+        generate_chart
       end
 
       def generate_data
