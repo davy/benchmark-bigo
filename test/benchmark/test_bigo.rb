@@ -1,5 +1,6 @@
 require "minitest/autorun"
 require "benchmark/bigo"
+require "tempfile"
 
 class TestBenchmarkBigo < MiniTest::Test
   def setup
@@ -146,4 +147,43 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_equal "#at 200", at_rep[1].label
     assert_equal "#at 300", at_rep[2].label
   end
+
+  def test_bigo_generate_data
+    json_file = Tempfile.new 'data.json'
+    report = Benchmark.bigo do |x|
+      x.config(:time => 1, :warmup => 1, :increments => 2)
+      x.generate :array
+
+      x.report("#at") {|array, size| array.at rand(size) }
+      x.data! json_file.path
+    end
+
+    json_data = json_file.read
+    assert json_data
+    data = JSON.parse json_data
+    assert data
+    assert_equal 1, data.size
+    assert_equal "#at", data[0]["name"]
+    assert data[0]["data"]
+    assert data[0]["data"]["100"]
+    assert data[0]["data"]["200"]
+  end
+
+  def test_bigo_generate_csv
+    csv_file = Tempfile.new 'data.csv'
+    report = Benchmark.bigo do |x|
+      x.config(:time => 1, :warmup => 1, :increments => 2)
+      x.generate :array
+
+      x.report("#at") {|array, size| array.at rand(size) }
+      x.csv! csv_file.path
+    end
+    data = CSV.read(csv_file.path)
+    assert data
+    assert_equal 2, data.size
+    assert_equal ['','100', '200'], data[0]
+    assert_equal "#at", data[1][0]
+    assert_equal data[1][0].size, 3
+  end
+
 end

@@ -1,6 +1,7 @@
 # encoding: utf-8
 require 'erb'
 require 'chartkick'
+require 'csv'
 require 'benchmark/ips'
 require 'benchmark/bigo/report'
 require 'benchmark/bigo/job'
@@ -35,6 +36,10 @@ module Benchmark
 
       if job.data?
         job.generate_data
+      end
+
+      if job.csv?
+        job.generate_csv
       end
 
       if job.chart?

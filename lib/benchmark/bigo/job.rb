@@ -58,6 +58,7 @@ module Benchmark
         @logscale = false
         @chart = nil
         @data_file = nil
+        @csv_file = nil
       end
 
       def config opts
@@ -81,6 +82,14 @@ module Benchmark
 
       def data! filename='data.json'
         @data_file = filename
+      end
+
+      def csv?
+        @csv_file
+      end
+
+      def csv! filename='data.csv'
+        @csv_file = filename
       end
 
       def logscale= val
@@ -171,6 +180,21 @@ module Benchmark
 
         File.open @data_file, 'w' do |f|
           f.write JSON.pretty_generate(all_data)
+        end
+      end
+
+      def generate_csv
+        return if @csv_file.nil?
+
+        all_data = @full_report.chart_data
+        data_points = all_data.map{|report| report[:data].keys }.flatten.uniq
+
+        CSV.open @csv_file, 'w' do |csv|
+          header = [''] + data_points
+          csv << header
+          all_data.each do |row|
+            csv << [row[:name]] + row[:data].values
+          end
         end
       end
 
