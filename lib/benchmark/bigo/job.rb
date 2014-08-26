@@ -58,6 +58,7 @@ module Benchmark
         @logscale = false
         @chart = nil
         @data_file = nil
+        @csv_file = nil
       end
 
       def config opts
@@ -67,20 +68,16 @@ module Benchmark
         @full_report.logscale! if @logscale
       end
 
-      def chart?
-        @chart
-      end
-
       def chart! filename='chart.html'
         @chart = filename
       end
 
-      def data?
-        @data_file
-      end
-
       def data! filename='data.json'
         @data_file = filename
+      end
+
+      def csv! filename='data.csv'
+        @csv_file = filename
       end
 
       def logscale= val
@@ -164,6 +161,12 @@ module Benchmark
         @full_report.per_iterations = 10**Math.log10(max_timing).ceil
       end
 
+      def generate_output
+        generate_data
+        generate_csv
+        generate_chart
+      end
+
       def generate_data
         return if @data_file.nil?
 
@@ -171,6 +174,21 @@ module Benchmark
 
         File.open @data_file, 'w' do |f|
           f.write JSON.pretty_generate(all_data)
+        end
+      end
+
+      def generate_csv
+        return if @csv_file.nil?
+
+        all_data = @full_report.chart_data
+        data_points = all_data.map{|report| report[:data].keys }.flatten.uniq
+
+        CSV.open @csv_file, 'w' do |csv|
+          header = [''] + data_points
+          csv << header
+          all_data.each do |row|
+            csv << [row[:name]] + row[:data].values
+          end
         end
       end
 
