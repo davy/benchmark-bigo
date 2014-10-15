@@ -19,7 +19,9 @@ class TestBenchmarkBigo < MiniTest::Test
 
       x.report("#at") {|array, size| array.at rand(size) }
       x.report("#index") {|array, size| array.index rand(size) }
-      x.report("sleep") { |a,b| sleep(0.25) }
+
+      # size 100 will sleep for .1 seconds, size 200 will sleep for .2 seconds
+      x.report("sleep") { |_, size| sleep(size / 1000.0) }
     end
 
     assert_equal 3, report.entries.length
@@ -45,8 +47,11 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_equal "sleep 100", sleep_rep[0].label
     assert_equal "sleep 200", sleep_rep[1].label
 
-    assert_equal 4, sleep_rep[0].iterations
-    assert_in_delta 4.0, sleep_rep[0].ips, 0.2
+    assert_equal 10, sleep_rep[0].iterations
+    assert_in_delta 10.0, sleep_rep[0].ips, 0.2
+
+    assert_equal 5, sleep_rep[1].iterations
+    assert_in_delta 5.0, sleep_rep[1].ips, 0.2
 
   end
 
@@ -56,22 +61,30 @@ class TestBenchmarkBigo < MiniTest::Test
       x.warmup = 1
       x.increments = 2
       x.generate(:array)
-      x.report("sleep") { |a,b| sleep(0.25) }
+
+      # size 100 will sleep for .1 seconds, size 200 will sleep for .2 seconds
+      x.report("sleep") { |_, size| sleep(size / 1000.0) }
     end
 
     rep = report.entries["sleep"]
     assert_equal 2, rep.size
 
     assert_equal "sleep 100", rep[0].label
-    assert_equal 4, rep[0].iterations
-    assert_in_delta 4.0, rep[0].ips, 0.2
+    assert_equal 10, rep[0].iterations
+    assert_in_delta 10.0, rep[0].ips, 0.2
+
+    assert_equal "sleep 200", rep[1].label
+    assert_equal 5, rep[1].iterations
+    assert_in_delta 5.0, rep[1].ips, 0.2
   end
 
   def test_bigo_defaults
     report = Benchmark.bigo do |x|
       x.config(:time => 1, :warmup => 1)
       x.generate :array
-      x.report("sleep") { |a,b| sleep(0.25) }
+
+      # size 100 will sleep for .1 seconds, size 200 will sleep for .2 seconds
+      x.report("sleep") { |_, size| sleep(size / 1000.0) }
     end
 
     assert_equal 1, report.entries.keys.length
@@ -85,8 +98,11 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_equal "sleep 400", rep[3].label
     assert_equal "sleep 500", rep[4].label
 
-    assert_equal 4, rep[0].iterations
-    assert_in_delta 4.0, rep[0].ips, 0.2
+    assert_equal 10, rep[0].iterations
+    assert_in_delta 10.0, rep[0].ips, 0.2
+
+    assert_equal 5, rep[1].iterations
+    assert_in_delta 5.0, rep[1].ips, 0.2
   end
 
   def test_bigo_increments_config
