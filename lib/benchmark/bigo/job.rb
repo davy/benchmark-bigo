@@ -101,12 +101,6 @@ module Benchmark
         end
       end
 
-      # custom incrementer
-      def incrementer &blk
-        @incrementer = blk
-        raise ArgumentError, "no block" unless @incrementer
-      end
-
       # linear incrementer
       def linear increments=100
         @incrementer = Proc.new {|i| i * increments }
