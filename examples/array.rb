@@ -4,16 +4,15 @@ require 'benchmark/bigo'
 
 report = Benchmark.bigo do |x|
 
-  # increments is the total number of data points to collect
-  x.increments = 6
+  # steps is the total number of data points to collect
+  x.steps = 6
+
+  # indicates the starting size of the object to test
+  x.min_size = 1000
 
   # generator should construct a test object of the given size
   # example of an Array generator
   x.generator {|size| (0...size).to_a.shuffle }
-
-  # specifies how the size of the object should grow
-  # indicates that arrays should grow linearly by 1000
-  x.linear 1000
 
   # report takes a label and a block.
   # block is passed in the generated object and the size of that object

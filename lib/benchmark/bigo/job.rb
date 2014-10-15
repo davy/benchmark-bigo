@@ -35,10 +35,7 @@ module Benchmark
 
       include Chartkick::Helper
 
-      # how many total increments are being measured
-      attr_accessor :increments
-
-      # whether to graph the results on a log scale
+      attr_accessor :min_size, :steps
 
       # whether to generate a chart of the results
       # if nil, do not generate chart
@@ -52,16 +49,23 @@ module Benchmark
         @generator = nil
 
         # defaults
-        linear
-        @increments = 5
+        @min_size = 100
+        @steps = 5
+
         @chart = nil
         @data_file = nil
         @csv_file = nil
       end
 
+
+      def max_size
+        @min_size * @steps
+      end
+
       def config opts
         super
-        @increments = opts[:increments] if opts[:increments]
+        @min_size = opts[:min_size] if opts[:min_size]
+        @steps = opts[:steps] if opts[:steps]
       end
 
       def chart! filename='chart.html'
@@ -103,15 +107,17 @@ module Benchmark
         end
       end
 
-      # linear incrementer
-      def linear increments=100
-        @incrementer = Proc.new {|i| i * increments }
+      def incrementer
+        @incrementer ||= Proc.new {|i| i * @min_size }
+        @incrementer
       end
 
       def sizes
-        (1..@increments).collect do |idx|
-          @incrementer.call(idx).to_i
+        @sizes ||=
+        (1..@steps).collect do |idx|
+          incrementer.call(idx).to_i
         end
+        @sizes
       end
 
       def item label="", str=nil, &blk # :yield:

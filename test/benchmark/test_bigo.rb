@@ -14,7 +14,7 @@ class TestBenchmarkBigo < MiniTest::Test
 
   def test_bigo
     report = Benchmark.bigo do |x|
-      x.config(:time => 1, :warmup => 1, :increments => 2)
+      x.config(:time => 1, :warmup => 1, :steps => 2)
       x.generate :array
 
       x.report("#at") {|array, size| array.at rand(size) }
@@ -59,7 +59,7 @@ class TestBenchmarkBigo < MiniTest::Test
     report = Benchmark.bigo do |x|
       x.time = 1
       x.warmup = 1
-      x.increments = 2
+      x.steps = 2
       x.generate(:array)
 
       # size 100 will sleep for .1 seconds, size 200 will sleep for .2 seconds
@@ -105,9 +105,9 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_in_delta 5.0, rep[1].ips, 0.2
   end
 
-  def test_bigo_increments_config
+  def test_bigo_steps_config
     report = Benchmark.bigo do |x|
-      x.config(:time => 1, :warmup => 1, :increments => 3)
+      x.config(:time => 1, :warmup => 1, :steps => 3)
       x.generate :array
 
       x.report("#at") {|array, size| array.at rand(size) }
@@ -126,10 +126,10 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_equal "#at 300", at_rep[2].label
   end
 
-  def test_bigo_increments_setter
+  def test_bigo_steps_setter
     report = Benchmark.bigo do |x|
       x.config(:time => 1, :warmup => 1)
-      x.increments = 3
+      x.steps = 3
       x.generate :array
 
       x.report("#at") {|array, size| array.at rand(size) }
@@ -151,7 +151,7 @@ class TestBenchmarkBigo < MiniTest::Test
   def test_bigo_generate_data
     json_file = Tempfile.new 'data.json'
     report = Benchmark.bigo do |x|
-      x.config(:time => 1, :warmup => 1, :increments => 2)
+      x.config(:time => 1, :warmup => 1, :steps => 2)
       x.generate :array
 
       x.report("#at") {|array, size| array.at rand(size) }
@@ -172,7 +172,7 @@ class TestBenchmarkBigo < MiniTest::Test
   def test_bigo_generate_csv
     csv_file = Tempfile.new 'data.csv'
     report = Benchmark.bigo do |x|
-      x.config(:time => 1, :warmup => 1, :increments => 2)
+      x.config(:time => 1, :warmup => 1, :steps => 2)
       x.generate :array
 
       x.report("#at") {|array, size| array.at rand(size) }

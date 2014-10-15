@@ -24,9 +24,6 @@ $ gem install benchmark-bigo
 require 'benchmark/bigo'
 
 report = Benchmark.bigo do |x|
-  # increments is the total number of data points to collect
-  x.increments = 6
-
   # generator should construct a test object of the given size
   # example of an Array generator
   x.generator {|size| (0...size).to_a.shuffle }
@@ -34,8 +31,13 @@ report = Benchmark.bigo do |x|
   # or you can use the built in array generator
   # x.generate :array
 
-  # specifies how the size of the object should grow
-  x.linear 1000
+  # steps is the total number of data points to collect
+  # default is 5
+  x.steps = 6
+
+  # indicates the starting size of the object to test
+  # default is 100
+  x.min_size = 100
 
   # report takes a label and a block.
   # block is passed in the generated object and the size of that object
