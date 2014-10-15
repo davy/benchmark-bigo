@@ -39,7 +39,6 @@ module Benchmark
       attr_accessor :increments
 
       # whether to graph the results on a log scale
-      attr_accessor :logscale
 
       # whether to generate a chart of the results
       # if nil, do not generate chart
@@ -55,7 +54,6 @@ module Benchmark
         # defaults
         linear
         @increments = 5
-        @logscale = false
         @chart = nil
         @data_file = nil
         @csv_file = nil
@@ -64,8 +62,6 @@ module Benchmark
       def config opts
         super
         @increments = opts[:increments] if opts[:increments]
-        @logscale = opts[:logscale] if opts[:logscale]
-        @full_report.logscale! if @logscale
       end
 
       def chart! filename='chart.html'
@@ -78,11 +74,6 @@ module Benchmark
 
       def csv! filename='data.csv'
         @csv_file = filename
-      end
-
-      def logscale= val
-        @logscale = val
-        @full_report.logscale! if @logscale
       end
 
       def generator &blk
@@ -119,14 +110,6 @@ module Benchmark
       # linear incrementer
       def linear increments=100
         @incrementer = Proc.new {|i| i * increments }
-        @logscale = false
-      end
-
-      # exponential incrementer
-      def exponential base=10
-        @incrementer = Proc.new {|i| base ** (i-1) }
-        @full_report.logscale!
-        @logscale = true
       end
 
       def sizes

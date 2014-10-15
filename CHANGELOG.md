@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Master
+-------------------------
+
+* Remove exponential incrementer
 
 0.1.0 (Current release)
 -------------------------

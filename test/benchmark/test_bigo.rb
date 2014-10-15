@@ -89,22 +89,6 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_in_delta 4.0, rep[0].ips, 0.2
   end
 
-  def test_bigo_exponential
-    report = Benchmark.bigo do |x|
-      x.config(:time => 1, :warmup => 1, :increments => 2)
-      x.generate :array
-      x.exponential
-      x.report("sleep") { |a,b| sleep(0.25) }
-    end
-
-    rep = report.entries["sleep"]
-
-    assert_equal "sleep 1", rep[0].label
-    assert_equal "sleep 10", rep[1].label
-    assert_equal 4, rep[0].iterations
-    assert_in_delta 4.0, rep[0].ips, 0.2
-  end
-
   def test_bigo_increments_config
     report = Benchmark.bigo do |x|
       x.config(:time => 1, :warmup => 1, :increments => 3)

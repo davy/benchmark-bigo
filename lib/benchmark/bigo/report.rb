@@ -9,15 +9,6 @@ module Benchmark
       def initialize
         @per_iterations = 0
         @entries = {}
-        @logscale = false
-      end
-
-      def logscale?
-        @logscale
-      end
-
-      def logscale!
-        @logscale = true
       end
 
       def add_entry label, microseconds, iters, ips, ips_sd, measurement_cycle
@@ -58,7 +49,7 @@ module Benchmark
 
       def chart_opts chart_data
 
-        axis_type = logscale? ? 'logarithmic' : 'linear'
+        axis_type = 'linear'
 
         if chart_data.is_a? Array
           min = chart_data.collect{|d| d[:data].values.min}.min
