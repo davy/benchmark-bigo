@@ -94,7 +94,9 @@ module Benchmark
           @generator = Proc.new{|size| (0...size).to_a.shuffle }
 
         # when :string
-          # to do
+          # TODO: string generator
+        # when :hash
+          # TODO: hash generator
 
         else
           raise "#{sym} is not a supported object type"
