@@ -141,13 +141,6 @@ module Benchmark
       end
       alias_method :report, :item
 
-      def run_warmup
-        super
-
-        max_timing = @timing.values.max
-        @full_report.per_iterations = 10**Math.log10(max_timing).ceil
-      end
-
       def generate_output
         generate_json
         generate_csv
