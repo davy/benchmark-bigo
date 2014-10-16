@@ -32,16 +32,16 @@ report = Benchmark.bigo do |x|
   # x.generate :array
 
   # steps is the total number of data points to collect
-  # default is 5
+  # default is 10
   x.steps = 6
 
   # step_size is the size between steps
   # default is 100
-  x.step_size = 100
+  x.step_size = 200
 
   # indicates the starting size of the object to test
   # default is 100
-  x.min_size = 100
+  x.min_size = 1000
 
   # report takes a label and a block.
   # block is passed in the generated object and the size of that object

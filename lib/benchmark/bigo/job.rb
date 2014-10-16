@@ -51,7 +51,7 @@ module Benchmark
         # defaults
         @min_size = 100
         @step_size = 100
-        @steps = 5
+        @steps = 10
 
         @chart = nil
         @json_file = nil

@@ -90,7 +90,7 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_equal 1, report.entries.keys.length
     rep = report.entries["sleep"]
 
-    assert_equal 5, rep.size
+    assert_equal 10, rep.size
 
     assert_equal "sleep 100", rep[0].label
     assert_equal "sleep 200", rep[1].label
