@@ -10,6 +10,9 @@ report = Benchmark.bigo do |x|
   # indicates the starting size of the object to test
   x.min_size = 1000
 
+  # step_size is the size between steps
+  x.step_size = 2000
+
   # generator should construct a test object of the given size
   # example of an Array generator
   x.generator {|size| (0...size).to_a.shuffle }

@@ -10,6 +10,7 @@ Master
     * Rename increments to steps
     * Remove linear
     * Add min_size
+    * Add step_size
 
 0.1.0 (Current release)
 -------------------------

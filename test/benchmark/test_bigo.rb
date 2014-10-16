@@ -105,9 +105,10 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_in_delta 5.0, rep[1].ips, 0.2
   end
 
-  def test_bigo_steps_config
+  def test_bigo_config
     report = Benchmark.bigo do |x|
-      x.config(:time => 1, :warmup => 1, :steps => 3)
+      x.config(:time => 1, :warmup => 1,
+               :steps => 3, :step_size => 200, :min_size => 50)
       x.generate :array
 
       x.report("#at") {|array, size| array.at rand(size) }
@@ -121,15 +122,17 @@ class TestBenchmarkBigo < MiniTest::Test
 
     assert_equal 3, at_rep.size
 
-    assert_equal "#at 100", at_rep[0].label
-    assert_equal "#at 200", at_rep[1].label
-    assert_equal "#at 300", at_rep[2].label
+    assert_equal "#at 50", at_rep[0].label
+    assert_equal "#at 250", at_rep[1].label
+    assert_equal "#at 450", at_rep[2].label
   end
 
-  def test_bigo_steps_setter
+  def test_bigo_setters
     report = Benchmark.bigo do |x|
       x.config(:time => 1, :warmup => 1)
       x.steps = 3
+      x.step_size = 200
+      x.min_size = 50
       x.generate :array
 
       x.report("#at") {|array, size| array.at rand(size) }
@@ -143,9 +146,9 @@ class TestBenchmarkBigo < MiniTest::Test
 
     assert_equal 3, at_rep.size
 
-    assert_equal "#at 100", at_rep[0].label
-    assert_equal "#at 200", at_rep[1].label
-    assert_equal "#at 300", at_rep[2].label
+    assert_equal "#at 50", at_rep[0].label
+    assert_equal "#at 250", at_rep[1].label
+    assert_equal "#at 450", at_rep[2].label
   end
 
   def test_bigo_generate_json

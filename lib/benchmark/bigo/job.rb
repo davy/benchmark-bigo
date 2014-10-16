@@ -35,7 +35,7 @@ module Benchmark
 
       include Chartkick::Helper
 
-      attr_accessor :min_size, :steps
+      attr_accessor :min_size, :steps, :step_size
 
       # whether to generate a chart of the results
       # if nil, do not generate chart
@@ -50,6 +50,7 @@ module Benchmark
 
         # defaults
         @min_size = 100
+        @step_size = 100
         @steps = 5
 
         @chart = nil
@@ -59,13 +60,14 @@ module Benchmark
 
 
       def max_size
-        @min_size * @steps
+        @min_size + (@step_size * (@steps-1))
       end
 
       def config opts
         super
         @min_size = opts[:min_size] if opts[:min_size]
         @steps = opts[:steps] if opts[:steps]
+        @step_size = opts[:step_size] if opts[:step_size]
       end
 
       def chart! filename='chart.html'
@@ -108,7 +110,7 @@ module Benchmark
       end
 
       def incrementer
-        @incrementer ||= Proc.new {|i| i * @min_size }
+        @incrementer ||= Proc.new {|i| @min_size + (i-1) * @step_size }
         @incrementer
       end
 

@@ -35,6 +35,10 @@ report = Benchmark.bigo do |x|
   # default is 5
   x.steps = 6
 
+  # step_size is the size between steps
+  # default is 100
+  x.step_size = 100
+
   # indicates the starting size of the object to test
   # default is 100
   x.min_size = 100
