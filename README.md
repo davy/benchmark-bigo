@@ -52,15 +52,15 @@ report = Benchmark.bigo do |x|
   # generate HTML chart using ChartKick
   x.chart! 'chart_array_simple.html'
 
+  # for each report, create a comparison chart showing the report
+  # and scaled series for O(log n), O(n), O(n log n), and O(n squared)
+  x.compare!
+
   # generate JSON output
   x.json! 'chart_array_simple.json'
 
   # generate CSV output
   x.csv! 'chart_array_simple.csv'
-
-  # for each report, create a comparison chart showing the report
-  # and scaled series for O(log n), O(n), O(n log n), and O(n squared)
-  x.compare!
 end
 ```
 
