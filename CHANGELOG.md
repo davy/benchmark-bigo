@@ -4,7 +4,12 @@ Changelog
 Master
 -------------------------
 
-* Remove exponential incrementer
+* Interface changes
+    * Remove exponential incrementer
+    * Rename data! to json!
+    * Rename increments to steps
+    * Remove linear
+    * Add min_size
 
 0.1.0 (Current release)
 -------------------------
