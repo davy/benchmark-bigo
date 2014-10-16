@@ -53,7 +53,7 @@ module Benchmark
         @steps = 5
 
         @chart = nil
-        @data_file = nil
+        @json_file = nil
         @csv_file = nil
       end
 
@@ -72,8 +72,8 @@ module Benchmark
         @chart = filename
       end
 
-      def data! filename='data.json'
-        @data_file = filename
+      def json! filename='data.json'
+        @json_file = filename
       end
 
       def csv! filename='data.csv'
@@ -147,17 +147,17 @@ module Benchmark
       end
 
       def generate_output
-        generate_data
+        generate_json
         generate_csv
         generate_chart
       end
 
-      def generate_data
-        return if @data_file.nil?
+      def generate_json
+        return if @json_file.nil?
 
         all_data = @full_report.chart_data
 
-        File.open @data_file, 'w' do |f|
+        File.open @json_file, 'w' do |f|
           f.write JSON.pretty_generate(all_data)
         end
       end

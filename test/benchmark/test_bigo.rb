@@ -148,14 +148,14 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_equal "#at 300", at_rep[2].label
   end
 
-  def test_bigo_generate_data
+  def test_bigo_generate_json
     json_file = Tempfile.new 'data.json'
     report = Benchmark.bigo do |x|
       x.config(:time => 1, :warmup => 1, :steps => 2)
       x.generate :array
 
       x.report("#at") {|array, size| array.at rand(size) }
-      x.data! json_file.path
+      x.json! json_file.path
     end
 
     json_data = json_file.read

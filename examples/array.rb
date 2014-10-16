@@ -20,11 +20,14 @@ report = Benchmark.bigo do |x|
   x.report("#index") {|generated, size| generated.index rand(size) }
   x.report("#empty-index") {|generated, size| generated.index 'foo' }
 
-  # save results in JSON format
-  x.data! 'chart_array_simple.json'
-
   # generate HTML chart using ChartKick
   x.chart! 'chart_array_simple.html'
+
+  # generate JSON output
+  x.json! 'chart_array_simple.json'
+
+  # generate CSV output
+  x.csv! 'chart_array_simple.csv'
 
   # for each report, create a comparison chart showing the report
   # and scaled series for O(log n), O(n), O(n log n), and O(n squared)
