@@ -23,7 +23,7 @@ $ gem install benchmark-bigo
 ```ruby
 require 'benchmark/bigo'
 
-report = Benchmark.bigo do |x|
+Benchmark.bigo do |x|
   # generator should construct a test object of the given size
   # example of an Array generator
   x.generator {|size| (0...size).to_a.shuffle }
@@ -63,6 +63,56 @@ report = Benchmark.bigo do |x|
   x.csv! 'chart_array_simple.csv'
 end
 ```
+
+## Generators
+
+In order to test a block of code on an input of varying size, the benchmark tool must know how to generate this varying input. **Generators** are used to create this input to be tested. In many cases the generator creates an object, but this is not the only way generators can be used.
+
+There are a few built-in generators to make it easy to test common objects.
+
+### Array
+
+The Array generator is used by calling
+
+```
+Benchmark.bigo do |x|
+  x.generate :array
+  ...
+end
+```
+
+This generator knows how to create Arrays of varying sizes. The generated Array contains the set of numbers between 0 and (size-1), randomly shuffled. For example, a generated Array of size 5 might look like:
+
+```
+[3,2,4,1,0]
+```
+
+### Custom
+
+In many cases a custom generator will be required. This is the case if the code you wish to benchmark
+runs against a specific type of input. A custom generator is created by specifying a block that accepts a single size parameter and returns an object of that size.
+
+The following generator creates a Hash where each of the keys is the integer of the size and the value is a random string 10 characters long.
+
+```
+Benchmark.bigo do |x|
+  x.generator do |size|
+    h = {}
+    (0...size).each {|i| h[i] = SecureRandom.hex(10)}
+    h
+  end
+  ...
+end
+
+# for size 5
+# => { 0 => "1fb3e5bb88815d824fff",
+#      1 => "63006b6e810502f5bedd",
+#      2 => "7bef4e15a2b4f9e44fa9",
+#      3 => "f78319925f8c0790b409",
+#      4 => "2bfc6a0a91c4949dc6ae"
+#    }
+```
+
 
 ## Contributing
 
