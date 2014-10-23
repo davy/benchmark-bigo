@@ -158,7 +158,7 @@ module Benchmark
       def generate_json
         return if @json_file.nil?
 
-        all_data = @full_report.chart_data
+        all_data = @full_report.data
 
         File.open @json_file, 'w' do |f|
           f.write JSON.pretty_generate(all_data)
@@ -168,7 +168,7 @@ module Benchmark
       def generate_csv
         return if @csv_file.nil?
 
-        all_data = @full_report.chart_data
+        all_data = @full_report.data
         data_points = all_data.map{|report| report[:data].keys }.flatten.uniq
 
         CSV.open @csv_file, 'w' do |csv|

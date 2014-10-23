@@ -36,7 +36,7 @@ module Benchmark
         Hash[chart_hash.collect{|h| [h[:label], h[:microseconds_per_iters]]}]
       end
 
-      def chart_data
+      def data
         @entries.keys.map do |k|
           data = chart_for k
           {name: k, data: data }

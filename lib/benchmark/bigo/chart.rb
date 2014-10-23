@@ -9,7 +9,7 @@ module Benchmark
       end
 
       def generate opts={}
-        all_data = @report.chart_data
+        all_data = @report.data
 
         charts = []
         charts << { name: 'Growth Chart', data: all_data, opts: @report.chart_opts(all_data) }
