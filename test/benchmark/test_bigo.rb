@@ -155,4 +155,26 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_equal data[1][0].size, 3
   end
 
+  def test_generate_array
+
+    job = Benchmark::BigO::Job.new({:suite => nil,
+                                    :quiet => true})
+
+    job.generate :array
+
+    job.report('test') {|array, size| array.at rand(size) }
+
+    # should create 10 job entries
+    assert_equal 10, job.list.size
+
+    # the generated object should be an Array
+    assert Array === job.list.first.generated
+
+    # the Array should have 100 elements
+    assert_equal 100, job.list.first.generated.size
+
+    # when sorted, the array should equal 0...100
+    assert_equal (0...100).to_a, job.list.first.generated.sort
+  end
+
 end
