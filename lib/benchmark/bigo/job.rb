@@ -61,6 +61,7 @@ module Benchmark
 
       def max_size
         @min_size + (@step_size * (@steps-1))
+        # should also equal step(@steps-1)
       end
 
       def config opts
@@ -109,15 +110,16 @@ module Benchmark
         end
       end
 
-      def incrementer
-        @incrementer ||= Proc.new {|i| @min_size + (i-1) * @step_size }
-        @incrementer
+      # return the size for the nth step
+      # n = 0 returns @min_size
+      def step n
+        @min_size + (n * @step_size)
       end
 
       def sizes
         @sizes ||=
-        (1..@steps).collect do |idx|
-          incrementer.call(idx).to_i
+        (0...@steps).collect do |n|
+          step n
         end
         @sizes
       end

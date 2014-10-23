@@ -177,4 +177,17 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_equal (0...100).to_a, job.list.first.generated.sort
   end
 
+  def test_step
+    job = Benchmark::BigO::Job.new({:suite => nil,
+                                    :quiet => true})
+
+    job.min_size = 22
+    job.steps = 6
+    job.step_size = 10
+
+    assert_equal 22, job.step(0)
+    assert_equal 32, job.step(1)
+    assert_equal 42, job.step(2)
+  end
+
 end
