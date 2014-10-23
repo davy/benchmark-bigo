@@ -92,9 +92,26 @@ This generator knows how to create Arrays of varying sizes. The generated Array 
 [3,2,4,1,0]
 ```
 
+### String
+
+The String generator is used by calling
+
+```
+Benchmark.bigo do |x|
+  x.generate :string
+  ...
+end
+```
+
+This generator uses `SecureRandom.hex` to create random hexadecimal string of varying sizes. In this case the size indicates the length in *bytes* of the string to be generated. This means that the resulting string will be 2 * size. For example, a generated String of size 10 might look like:
+
+```
+"70fd739c8640b8c9212b"
+```
+
 ### Custom
 
-In many cases a custom generator will be required. This is the case if the code you wish to benchmark
+There are many cases where custom generators are needed. This is the case if the code you wish to benchmark
 runs against a specific type of input. A custom generator is created by specifying a block that accepts a single size parameter and returns an object of that size.
 
 The following generator creates a Hash where each of the keys is the integer of the size and the value is a random string 10 characters long.
@@ -117,7 +134,6 @@ end
 #      4 => "2bfc6a0a91c4949dc6ae"
 #    }
 ```
-
 
 ## Contributing
 

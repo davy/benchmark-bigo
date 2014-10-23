@@ -35,6 +35,8 @@ module Benchmark
 
       include Chartkick::Helper
 
+      require 'securerandom'
+
       attr_accessor :min_size, :steps, :step_size
 
       def initialize opts={}
@@ -67,7 +69,6 @@ module Benchmark
         # using gnuplot
         @term_plot = false
       end
-
 
       def max_size
         @min_size + (@step_size * (@steps-1))
@@ -112,20 +113,23 @@ module Benchmark
       # represented by the symbol passed to the method
       def generate sym
 
-        case sym
+        @generator =
+          case sym
 
-        # generates an Array containing shuffled integer values from 0 to size
-        when :array
-          @generator = Proc.new{|size| (0...size).to_a.shuffle }
+            # generates an Array containing shuffled integer values from 0 to size
+          when :array
+            Proc.new {|size| (0...size).to_a.shuffle }
 
-        # when :string
-          # TODO: string generator
-        # when :hash
-          # TODO: hash generator
+            # generates a random hex string of length size
+          when :string
+            Proc.new {|size| SecureRandom.hex(size) }
 
-        else
-          raise "#{sym} is not a supported object type"
-        end
+            # when :hash
+            # TODO: hash generator
+
+          else
+            raise "#{sym} is not a supported object type"
+          end
       end
 
       # return the size for the nth step
