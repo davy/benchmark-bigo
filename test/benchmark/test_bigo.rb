@@ -155,6 +155,23 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_equal data[1][0].size, 3
   end
 
+  def test_bigo_generate_chart
+    chart_file = Tempfile.new 'data.html'
+    report = Benchmark.bigo do |x|
+      x.config(:time => 1, :warmup => 1, :steps => 2)
+      x.generate :array
+
+      x.report("#at") {|array, size| array.at rand(size) }
+      x.chart! chart_file.path
+      x.compare!
+    end
+
+    data = File.read(chart_file.path)
+    assert data
+    assert data.match('<h1>Growth Chart</h1>')
+    assert data.match('<h1>#at</h1>')
+  end
+
   def test_generate_array
 
     job = Benchmark::BigO::Job.new({:suite => nil,
