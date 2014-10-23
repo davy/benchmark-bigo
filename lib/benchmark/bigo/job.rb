@@ -37,11 +37,6 @@ module Benchmark
 
       attr_accessor :min_size, :steps, :step_size
 
-      # whether to generate a chart of the results
-      # if nil, do not generate chart
-      # else string is name of file to write chart out to
-      attr_reader :chart
-
       def initialize opts={}
         super
 
@@ -53,8 +48,19 @@ module Benchmark
         @step_size = 100
         @steps = 10
 
-        @chart = nil
+        # whether to generate a chart of the results
+        # if nil, do not generate chart
+        # else string is name of file to write chart out to
+        @chart_file = nil
+
+        # whether to generate json output of the results
+        # if nil, do not generate data
+        # else string is name of file to write data out to
         @json_file = nil
+
+        # whether to generate csv output of the results
+        # if nil, do not generate data
+        # else string is name of file to write data out to
         @csv_file = nil
       end
 
@@ -72,7 +78,7 @@ module Benchmark
       end
 
       def chart! filename='chart.html'
-        @chart = filename
+        @chart_file = filename
       end
 
       def json! filename='data.json'
@@ -175,7 +181,7 @@ module Benchmark
       end
 
       def generate_chart
-        return if @chart.nil?
+        return if @chart_file.nil?
 
         all_data = @full_report.chart_data
 
@@ -193,7 +199,7 @@ module Benchmark
         template_file = File.join File.dirname(__FILE__), 'templates/chart.erb'
         template = ERB.new(File.read(template_file))
 
-        File.open @chart, 'w' do |f|
+        File.open @chart_file, 'w' do |f|
           f.write template.result(binding)
         end
 
