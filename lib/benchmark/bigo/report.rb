@@ -31,14 +31,11 @@ module Benchmark
         end
       end
 
-      def chart_for group_label
-        chart_hash = chart_hash group_label
-        Hash[chart_hash.collect{|h| [h[:label], h[:microseconds_per_iters]]}]
-      end
-
       def data
         @entries.keys.map do |k|
-          data = chart_for k
+          chart_hash = chart_hash k
+          data = Hash[chart_hash.collect{|h| [h[:label], h[:microseconds_per_iters]]}]
+
           {name: k, data: data }
         end
       end
