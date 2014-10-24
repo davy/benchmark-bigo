@@ -19,7 +19,7 @@ module Benchmark
         @entries[group_label].last
       end
 
-      def chart_hash group_label
+      def data_for group_label
         @entries[group_label].collect do |report|
           size = report.label.split(' ').last.to_i
           microseconds_per_iters = 1000000.0 / report.ips.to_f
@@ -33,10 +33,9 @@ module Benchmark
 
       def data
         @entries.keys.map do |k|
-          chart_hash = chart_hash k
-          data = Hash[chart_hash.collect{|h| [h[:label], h[:microseconds_per_iters]]}]
-
-          {name: k, data: data }
+          key_data = data_for(k)
+          data = Hash[key_data.collect{|h| [h[:label], h[:microseconds_per_iters]]}]
+          {name: k, data: data}
         end
       end
 
