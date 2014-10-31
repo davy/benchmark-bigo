@@ -8,33 +8,31 @@ module Benchmark
         @sizes = sizes
       end
 
-      def generate opts={}
+      def generate config={}
 
         charts = []
-        charts << { name: 'Growth Chart', data: @data, opts: chart_opts(@data) }
+        charts << { name: 'Growth Chart',
+                    data: @data,
+                    opts: opts_for(@data) }
 
-        if opts[:compare]
+        if config[:compare]
           for chart_data in @data
-            comparison_data = comparison_chart_data chart_data
-            charts << { name: chart_data[:name], data: comparison_data, opts: chart_opts(chart_data) }
+            charts << { name: chart_data[:name],
+                        data: comparison_for(chart_data),
+                        opts: opts_for([chart_data]) }
           end
         end
 
         charts
       end
 
-      def chart_opts chart_data
+      def opts_for data
+        data = [data] unless Array === data
 
         axis_type = 'linear'
 
-        if chart_data.is_a? Array
-          min = chart_data.collect{|d| d[:data].values.min}.min
-          max = chart_data.collect{|d| d[:data].values.max}.max
-
-        elsif chart_data.is_a? Hash
-          min = chart_data[:data].values.min
-          max = chart_data[:data].values.max
-        end
+        min = data.collect{|d| d[:data].values.min }.min
+        max = data.collect{|d| d[:data].values.max }.max
 
         orange = "#f0662d"
         purple = "#8062a6"
@@ -56,7 +54,7 @@ module Benchmark
         }
       end
 
-      def comparison_chart_data chart_data
+      def comparison_for data
         sample_size = @sizes.first
 
         # can't take log of 1,
@@ -65,7 +63,7 @@ module Benchmark
           sample_size = @sizes[1]
         end
 
-        sample = chart_data[:data][sample_size]
+        sample = data[:data][sample_size]
 
         logn_sample = sample/Math.log10(sample_size)
         n_sample = sample/sample_size
@@ -84,13 +82,13 @@ module Benchmark
           n2_data[n] = n * n * n2_sample
         end
 
-        comparison_data = []
-        comparison_data << chart_data
-        comparison_data << {name: 'log n', data: logn_data}
-        comparison_data << {name: 'n', data: n_data}
-        comparison_data << {name: 'n log n', data: nlogn_data}
-        comparison_data << {name: 'n_sq', data: n2_data}
-        comparison_data
+        comparison = []
+        comparison << data
+        comparison << {name: 'log n', data: logn_data}
+        comparison << {name: 'n', data: n_data}
+        comparison << {name: 'n log n', data: nlogn_data}
+        comparison << {name: 'n_sq', data: n2_data}
+        comparison
       end
     end
   end
