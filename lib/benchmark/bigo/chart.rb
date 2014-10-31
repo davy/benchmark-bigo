@@ -4,22 +4,21 @@ module Benchmark
     class Chart
 
       def initialize(report_data, sizes)
-        @data = report_data
-        @sizes = sizes
+        @data = report_data.freeze
+        @sizes = sizes.freeze
       end
 
       def generate config={}
 
-        charts = []
-        charts << { name: 'Growth Chart',
+        charts = [ { name: 'Growth Chart',
                     data: @data,
-                    opts: opts_for(@data) }
+                    opts: opts_for(@data) } ]
 
         if config[:compare]
-          for chart_data in @data
-            charts << { name: chart_data[:name],
-                        data: comparison_for(chart_data),
-                        opts: opts_for([chart_data]) }
+          for entry_data in @data
+            charts << { name: entry_data[:name],
+                        data: comparison_for(entry_data),
+                        opts: opts_for([entry_data]) }
           end
         end
 
