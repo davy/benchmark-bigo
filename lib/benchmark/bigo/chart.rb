@@ -38,8 +38,6 @@ module Benchmark
       def opts_for data
         data = [data] unless Array === data
 
-        axis_type = 'linear'
-
         min = data.collect{|d| d[:data].values.min }.min
         max = data.collect{|d| d[:data].values.max }.max
 
@@ -57,8 +55,8 @@ module Benchmark
           max: (max * 1.2).ceil,
           library: {
             colors: [orange, purple, light_green, med_blue, yellow],
-            xAxis: {type: axis_type, title: {text: "Size"}},
-            yAxis: {type: axis_type, title: {text: "Microseconds per Iteration"}}
+            xAxis: {type: 'linear', title: {text: "Size"}},
+            yAxis: {type: 'linear', title: {text: "Microseconds per Iteration"}}
           }
         }
       end
