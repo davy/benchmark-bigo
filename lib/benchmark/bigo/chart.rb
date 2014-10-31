@@ -64,40 +64,63 @@ module Benchmark
 
         sample = data[:data][sample_size]
 
-        logn_data = generate_data_for :logn, sample, sample_size
-        n_data = generate_data_for :n, sample, sample_size
-        nlogn_data = generate_data_for :nlogn, sample, sample_size
-        n2_data = generate_data_for :n_squared, sample, sample_size
+        comparison = [data]
 
-        comparison = []
-        comparison << data
-        comparison << {name: 'log n', data: logn_data}
-        comparison << {name: 'n', data: n_data}
-        comparison << {name: 'n log n', data: nlogn_data}
-        comparison << {name: 'n_sq', data: n2_data}
+        comparison << generate_data_for('log n', sample, sample_size)
+        comparison << generate_data_for('n', sample, sample_size)
+        comparison << generate_data_for('n log n', sample, sample_size)
+        comparison << generate_data_for('n squared', sample, sample_size)
+
         comparison
       end
 
       def generate_data_for type, sample, sample_size
-        case type
-        when :logn
-          logn_factor = sample/Math.log10(sample_size)
-          Hash[ @sizes.map {|n| [n, Math.log10(n) * logn_factor]} ]
 
-        when :n
-          n_factor = sample/sample_size
-          Hash[ @sizes.map {|n| [n, n * n_factor]} ]
+        # for the given sizes, create a hash from an array
+        # the keys of the hash are the sizes
+        # the values are the generated data for this type of comparison
+        data = Hash[ @sizes.map {|n| [n, data_generator(type, n, sample, sample_size) ] } ]
 
-        when :nlogn
-          nlogn_factor = sample/(sample_size * Math.log10(sample_size))
-          Hash[ @sizes.map {|n| [n, n * Math.log10(n) * nlogn_factor]} ]
-
-        when :n_squared
-          n2_factor = sample/(sample_size * sample_size)
-          Hash[ @sizes.map {|n| [n, n * n * n2_factor]} ]
-        end
+        { name: type, data: data }
 
       end
+
+      def data_generator type, n, sample, sample_size
+        # calculate the scaling factor for the given sample and sample_size
+        factor = factor_for(type, sample, sample_size)
+
+        case type
+        when 'log n'
+          Math.log10(n) * factor
+
+        when 'n'
+          n * factor
+
+        when 'n log n'
+          n * Math.log10(n) * factor
+
+        when 'n squared'
+          n * n * factor
+
+        end
+      end
+
+      def factor_for type, sample, sample_size
+        case type
+        when 'log n'
+          sample/Math.log10(sample_size)
+
+        when 'n'
+          sample/sample_size
+
+        when 'n log n'
+          sample/(sample_size * Math.log10(sample_size))
+
+        when 'n squared'
+          sample/(sample_size * sample_size)
+        end
+      end
+
     end
   end
 end
