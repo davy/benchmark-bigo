@@ -14,9 +14,8 @@ module Benchmark
         charts << { name: 'Growth Chart', data: @data, opts: chart_opts(@data) }
 
         if opts[:compare]
-          all_sizes = @sizes
           for chart_data in @data
-            comparison_data = comparison_chart_data chart_data, all_sizes
+            comparison_data = comparison_chart_data chart_data
             charts << { name: chart_data[:name], data: comparison_data, opts: chart_opts(chart_data) }
           end
         end
@@ -57,13 +56,13 @@ module Benchmark
         }
       end
 
-      def comparison_chart_data chart_data, sizes
-        sample_size = sizes.first
+      def comparison_chart_data chart_data
+        sample_size = @sizes.first
 
         # can't take log of 1,
         # so it can't be used as the sample
         if sample_size == 1
-          sample_size = sizes[1]
+          sample_size = @sizes[1]
         end
 
         sample = chart_data[:data][sample_size]
@@ -78,7 +77,7 @@ module Benchmark
         nlogn_data = {}
         n2_data = {}
 
-        sizes.each do |n|
+        @sizes.each do |n|
           logn_data[n] = Math.log10(n) * logn_sample
           n_data[n] = n * n_sample
           nlogn_data[n] = n * Math.log10(n) * nlogn_sample
