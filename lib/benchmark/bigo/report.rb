@@ -39,42 +39,6 @@ module Benchmark
         end
       end
 
-      def comparison_chart_data chart_data, sizes
-        sample_size = sizes.first
-
-        # can't take log of 1,
-        # so it can't be used as the sample
-        if sample_size == 1
-          sample_size = sizes[1]
-        end
-
-        sample = chart_data[:data][sample_size]
-
-        logn_sample = sample/Math.log10(sample_size)
-        n_sample = sample/sample_size
-        nlogn_sample = sample/(sample_size * Math.log10(sample_size))
-        n2_sample = sample/(sample_size * sample_size)
-
-        logn_data = {}
-        n_data = {}
-        nlogn_data = {}
-        n2_data = {}
-
-        sizes.each do |n|
-          logn_data[n] = Math.log10(n) * logn_sample
-          n_data[n] = n * n_sample
-          nlogn_data[n] = n * Math.log10(n) * nlogn_sample
-          n2_data[n] = n * n * n2_sample
-        end
-
-        comparison_data = []
-        comparison_data << chart_data
-        comparison_data << {name: 'log n', data: logn_data}
-        comparison_data << {name: 'n', data: n_data}
-        comparison_data << {name: 'n log n', data: nlogn_data}
-        comparison_data << {name: 'n_sq', data: n2_data}
-        comparison_data
-      end
     end
   end
 end
