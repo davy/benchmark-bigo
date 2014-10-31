@@ -3,9 +3,19 @@ module Benchmark
   module BigO
     class Chart
 
+      TYPES = [:logn, :n, :nlogn, :n_sq]
+
       def initialize(report_data, sizes)
         @data = report_data.freeze
         @sizes = sizes.freeze
+
+        @sample_size = @sizes.first
+
+        # can't take log of 1,
+        # so it can't be used as the sample
+        if @sample_size == 1
+          @sample_size = @sizes[1]
+        end
       end
 
       def generate config={}
@@ -54,70 +64,61 @@ module Benchmark
       end
 
       def comparison_for data
-        sample_size = @sizes.first
-
-        # can't take log of 1,
-        # so it can't be used as the sample
-        if sample_size == 1
-          sample_size = @sizes[1]
-        end
-
-        sample = data[:data][sample_size]
+        sample = data[:data][@sample_size]
 
         comparison = [data]
 
-        comparison << generate_data_for('log n', sample, sample_size)
-        comparison << generate_data_for('n', sample, sample_size)
-        comparison << generate_data_for('n log n', sample, sample_size)
-        comparison << generate_data_for('n squared', sample, sample_size)
+        TYPES.each do |type|
+          comparison << generate_data_for(type, sample)
+        end
 
         comparison
       end
 
-      def generate_data_for type, sample, sample_size
+      def generate_data_for type, sample
 
         # for the given sizes, create a hash from an array
         # the keys of the hash are the sizes
         # the values are the generated data for this type of comparison
-        data = Hash[ @sizes.map {|n| [n, data_generator(type, n, sample, sample_size) ] } ]
+        data = Hash[ @sizes.map {|n| [n, data_generator(type, n, sample) ] } ]
 
         { name: type, data: data }
 
       end
 
-      def data_generator type, n, sample, sample_size
-        # calculate the scaling factor for the given sample and sample_size
-        factor = factor_for(type, sample, sample_size)
+      def data_generator type, n, sample
+        factor = factor_for(type, sample)
 
         case type
-        when 'log n'
+        when :logn
           Math.log10(n) * factor
 
-        when 'n'
+        when :n
           n * factor
 
-        when 'n log n'
+        when :nlogn
           n * Math.log10(n) * factor
 
-        when 'n squared'
+        when :n_sq
           n * n * factor
 
         end
       end
 
-      def factor_for type, sample, sample_size
+      # calculate the scaling factor for the given type and sample using sample_size
+      def factor_for type, sample
         case type
-        when 'log n'
-          sample/Math.log10(sample_size)
+        when :logn
+          sample/Math.log10(@sample_size)
 
-        when 'n'
-          sample/sample_size
+        when :n
+          sample/@sample_size
 
-        when 'n log n'
-          sample/(sample_size * Math.log10(sample_size))
+        when :nlogn
+          sample/(@sample_size * Math.log10(@sample_size))
 
-        when 'n squared'
-          sample/(sample_size * sample_size)
+        when :n_sq
+          sample/(@sample_size * @sample_size)
         end
       end
 
