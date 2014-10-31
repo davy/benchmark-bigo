@@ -64,22 +64,10 @@ module Benchmark
 
         sample = data[:data][sample_size]
 
-        logn_sample = sample/Math.log10(sample_size)
-        n_sample = sample/sample_size
-        nlogn_sample = sample/(sample_size * Math.log10(sample_size))
-        n2_sample = sample/(sample_size * sample_size)
-
-        logn_data = {}
-        n_data = {}
-        nlogn_data = {}
-        n2_data = {}
-
-        @sizes.each do |n|
-          logn_data[n] = Math.log10(n) * logn_sample
-          n_data[n] = n * n_sample
-          nlogn_data[n] = n * Math.log10(n) * nlogn_sample
-          n2_data[n] = n * n * n2_sample
-        end
+        logn_data = generate_data_for :logn, sample, sample_size
+        n_data = generate_data_for :n, sample, sample_size
+        nlogn_data = generate_data_for :nlogn, sample, sample_size
+        n2_data = generate_data_for :n_squared, sample, sample_size
 
         comparison = []
         comparison << data
@@ -88,6 +76,27 @@ module Benchmark
         comparison << {name: 'n log n', data: nlogn_data}
         comparison << {name: 'n_sq', data: n2_data}
         comparison
+      end
+
+      def generate_data_for type, sample, sample_size
+        case type
+        when :logn
+          logn_factor = sample/Math.log10(sample_size)
+          Hash[ @sizes.map {|n| [n, Math.log10(n) * logn_factor]} ]
+
+        when :n
+          n_factor = sample/sample_size
+          Hash[ @sizes.map {|n| [n, n * n_factor]} ]
+
+        when :nlogn
+          nlogn_factor = sample/(sample_size * Math.log10(sample_size))
+          Hash[ @sizes.map {|n| [n, n * Math.log10(n) * nlogn_factor]} ]
+
+        when :n_squared
+          n2_factor = sample/(sample_size * sample_size)
+          Hash[ @sizes.map {|n| [n, n * n * n2_factor]} ]
+        end
+
       end
     end
   end
