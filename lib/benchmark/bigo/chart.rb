@@ -80,7 +80,22 @@ module Benchmark
         # the values are the generated data for this type of comparison
         data = Hash[ @sizes.map {|n| [n, data_generator(type, n, sample) ] } ]
 
-        { name: type, data: data }
+        { name: title_for(type), data: data }
+
+      end
+
+      def title_for type
+
+        case type
+        when :logn
+          'log n'
+        when :n
+          'n'
+        when :nlogn
+          'n log n'
+        when :n_sq
+          'n squared'
+        end
 
       end
 
