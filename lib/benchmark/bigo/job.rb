@@ -183,7 +183,7 @@ module Benchmark
       def generate_chart
         return if @chart_file.nil?
 
-        @chart = Chart.new @full_report, sizes
+        @chart = Chart.new @full_report.data, sizes
 
         charts = @chart.generate(compare: compare?)
 

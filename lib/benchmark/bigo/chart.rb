@@ -3,20 +3,19 @@ module Benchmark
   module BigO
     class Chart
 
-      def initialize(report, sizes)
-        @report = report
+      def initialize(report_data, sizes)
+        @data = report_data
         @sizes = sizes
       end
 
       def generate opts={}
-        all_data = @report.data
 
         charts = []
-        charts << { name: 'Growth Chart', data: all_data, opts: chart_opts(all_data) }
+        charts << { name: 'Growth Chart', data: @data, opts: chart_opts(@data) }
 
         if opts[:compare]
           all_sizes = @sizes
-          for chart_data in all_data
+          for chart_data in @data
             comparison_data = comparison_chart_data chart_data, all_sizes
             charts << { name: chart_data[:name], data: comparison_data, opts: chart_opts(chart_data) }
           end
