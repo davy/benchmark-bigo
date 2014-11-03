@@ -4,6 +4,7 @@ Changelog
 Master
 -------------------------
 
+* Added constant line to comparison charts
 * Interface changes
     * Remove exponential incrementer
     * Rename data! to json!

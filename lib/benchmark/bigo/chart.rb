@@ -3,7 +3,7 @@ module Benchmark
   module BigO
     class Chart
 
-      TYPES = [:logn, :n, :nlogn, :n_sq]
+      TYPES = [:const, :logn, :n, :nlogn, :n_sq]
 
       def initialize(report_data, sizes)
         @data = report_data.freeze
@@ -87,6 +87,8 @@ module Benchmark
       def title_for type
 
         case type
+        when :const
+          'const'
         when :logn
           'log n'
         when :n
@@ -103,6 +105,8 @@ module Benchmark
         factor = factor_for(type, sample)
 
         case type
+        when :const
+          factor
         when :logn
           Math.log10(n) * factor
 
@@ -121,6 +125,8 @@ module Benchmark
       # calculate the scaling factor for the given type and sample using sample_size
       def factor_for type, sample
         case type
+        when :const
+          sample
         when :logn
           sample/Math.log10(@sample_size)
 
