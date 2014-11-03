@@ -5,7 +5,7 @@ require 'benchmark/bigo'
 report = Benchmark.bigo do |x|
 
   # use built-in random Array generator
-  x.generate(:array)
+  x.generate :array
 
   # report takes a label and a block.
   # block is passed in the generated object and the size of that object

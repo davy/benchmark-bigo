@@ -9,15 +9,6 @@ module Benchmark
       def initialize
         @per_iterations = 0
         @entries = {}
-        @logscale = false
-      end
-
-      def logscale?
-        @logscale
-      end
-
-      def logscale!
-        @logscale = true
       end
 
       def add_entry label, microseconds, iters, ips, ips_sd, measurement_cycle
@@ -28,17 +19,13 @@ module Benchmark
         @entries[group_label].last
       end
 
-      def scaled_iterations
-        (@per_iterations.to_f * 50 )
-      end
-
       def chart_hash group_label
         @entries[group_label].collect do |report|
           size = report.label.split(' ').last.to_i
-          seconds_per_scaled_iters = scaled_iterations / report.ips.to_f
+          microseconds_per_iters = 1000000.0 / report.ips.to_f
 
           {label: size,
-           seconds_per_scaled_iters: seconds_per_scaled_iters,
+           microseconds_per_iters: microseconds_per_iters,
            ips: report.ips
           }
         end
@@ -46,7 +33,7 @@ module Benchmark
 
       def chart_for group_label
         chart_hash = chart_hash group_label
-        Hash[chart_hash.collect{|h| [h[:label], h[:seconds_per_scaled_iters]]}]
+        Hash[chart_hash.collect{|h| [h[:label], h[:microseconds_per_iters]]}]
       end
 
       def chart_data
@@ -58,7 +45,7 @@ module Benchmark
 
       def chart_opts chart_data
 
-        axis_type = logscale? ? 'logarithmic' : 'linear'
+        axis_type = 'linear'
 
         if chart_data.is_a? Array
           min = chart_data.collect{|d| d[:data].values.min}.min
@@ -84,7 +71,7 @@ module Benchmark
           library: {
             colors: [orange, purple, light_green, med_blue, yellow],
             xAxis: {type: axis_type, title: {text: "Size"}},
-            yAxis: {type: axis_type, title: {text: "Seconds per #{scaled_iterations.to_i} Iterations"}}
+            yAxis: {type: axis_type, title: {text: "Microseconds per Iteration"}}
           }
         }
       end

@@ -35,11 +35,7 @@ module Benchmark
 
       include Chartkick::Helper
 
-      # how many total increments are being measured
-      attr_accessor :increments
-
-      # whether to graph the results on a log scale
-      attr_accessor :logscale
+      attr_accessor :min_size, :steps, :step_size
 
       # whether to generate a chart of the results
       # if nil, do not generate chart
@@ -53,36 +49,38 @@ module Benchmark
         @generator = nil
 
         # defaults
-        linear
-        @increments = 5
-        @logscale = false
+        @min_size = 100
+        @step_size = 100
+        @steps = 10
+
         @chart = nil
-        @data_file = nil
+        @json_file = nil
         @csv_file = nil
+      end
+
+
+      def max_size
+        @min_size + (@step_size * (@steps-1))
+        # should also equal step(@steps-1)
       end
 
       def config opts
         super
-        @increments = opts[:increments] if opts[:increments]
-        @logscale = opts[:logscale] if opts[:logscale]
-        @full_report.logscale! if @logscale
+        @min_size = opts[:min_size] if opts[:min_size]
+        @steps = opts[:steps] if opts[:steps]
+        @step_size = opts[:step_size] if opts[:step_size]
       end
 
       def chart! filename='chart.html'
         @chart = filename
       end
 
-      def data! filename='data.json'
-        @data_file = filename
+      def json! filename='data.json'
+        @json_file = filename
       end
 
       def csv! filename='data.csv'
         @csv_file = filename
-      end
-
-      def logscale= val
-        @logscale = val
-        @full_report.logscale! if @logscale
       end
 
       def generator &blk
@@ -103,36 +101,27 @@ module Benchmark
           @generator = Proc.new{|size| (0...size).to_a.shuffle }
 
         # when :string
-          # to do
+          # TODO: string generator
+        # when :hash
+          # TODO: hash generator
 
         else
           raise "#{sym} is not a supported object type"
         end
       end
 
-      # custom incrementer
-      def incrementer &blk
-        @incrementer = blk
-        raise ArgumentError, "no block" unless @incrementer
-      end
-
-      # linear incrementer
-      def linear increments=100
-        @incrementer = Proc.new {|i| i * increments }
-        @logscale = false
-      end
-
-      # exponential incrementer
-      def exponential base=10
-        @incrementer = Proc.new {|i| base ** (i-1) }
-        @full_report.logscale!
-        @logscale = true
+      # return the size for the nth step
+      # n = 0 returns @min_size
+      def step n
+        @min_size + (n * @step_size)
       end
 
       def sizes
-        (1..@increments).collect do |idx|
-          @incrementer.call(idx).to_i
+        @sizes ||=
+        (0...@steps).collect do |n|
+          step n
         end
+        @sizes
       end
 
       def item label="", str=nil, &blk # :yield:
@@ -154,25 +143,18 @@ module Benchmark
       end
       alias_method :report, :item
 
-      def run_warmup
-        super
-
-        max_timing = @timing.values.max
-        @full_report.per_iterations = 10**Math.log10(max_timing).ceil
-      end
-
       def generate_output
-        generate_data
+        generate_json
         generate_csv
         generate_chart
       end
 
-      def generate_data
-        return if @data_file.nil?
+      def generate_json
+        return if @json_file.nil?
 
         all_data = @full_report.chart_data
 
-        File.open @data_file, 'w' do |f|
+        File.open @json_file, 'w' do |f|
           f.write JSON.pretty_generate(all_data)
         end
       end
