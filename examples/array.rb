@@ -21,7 +21,7 @@ report = Benchmark.bigo do |x|
   # block is passed in the generated object and the size of that object
   x.report("#at") {|generated, size| generated.at rand(size) }
   x.report("#index") {|generated, size| generated.index rand(size) }
-  x.report("#empty-index") {|generated, size| generated.index 'foo' }
+  x.report("#index-miss") {|generated, size| generated.index (size + rand(size)) }
 
   # generate HTML chart using ChartKick
   x.chart! 'chart_array_simple.html'
@@ -36,4 +36,5 @@ report = Benchmark.bigo do |x|
   # generate CSV output
   x.csv! 'chart_array_simple.csv'
 
+  x.termplot!
 end
