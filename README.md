@@ -109,6 +109,33 @@ This generator uses `SecureRandom.hex` to create random hexadecimal string of va
 "70fd739c8640b8c9212b"
 ```
 
+### Size
+
+This generator is useful when there isn't a direct object to be tested, and instead the benchmark is testing the impact of the size within the report blocks themselves. In this case, the two variables passed to the report block will both be the size value. The example shows how you might test the performance difference for iteration operations.
+
+Example:
+
+```
+Benchmark.bigo do |x|
+  x.generate :size
+
+  x.report("#times") {|size,_|
+
+    size.times do |i|
+      # do things here
+    end
+  }
+
+  x.report("for") {|size,_|
+
+    for i in size
+      # do things here
+    end
+  }
+
+end
+```
+
 ### Custom
 
 There are many cases where custom generators are needed. This is the case if the code you wish to benchmark

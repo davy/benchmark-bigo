@@ -124,6 +124,12 @@ module Benchmark
           when :string
             Proc.new {|size| SecureRandom.hex(size) }
 
+            # simply returns the size
+            # for performance benefits when handling the
+            # size completely in the report block
+          when :size
+            Proc.new {|size| size }
+
             # when :hash
             # TODO: hash generator
 
