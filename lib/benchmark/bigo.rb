@@ -4,6 +4,7 @@ require 'chartkick'
 require 'csv'
 require 'benchmark/ips'
 require 'benchmark/bigo/report'
+require 'benchmark/bigo/chart'
 require 'benchmark/bigo/job'
 
 module Benchmark

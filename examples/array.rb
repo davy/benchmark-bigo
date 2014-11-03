@@ -11,7 +11,7 @@ report = Benchmark.bigo do |x|
   x.min_size = 1000
 
   # step_size is the size between steps
-  x.step_size = 2000
+  x.step_size = 1000
 
   # generator should construct a test object of the given size
   # example of an Array generator
