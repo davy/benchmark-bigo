@@ -56,6 +56,9 @@ Benchmark.bigo do |x|
   # and scaled series for O(log n), O(n), O(n log n), and O(n squared)
   x.compare!
 
+  # generate an ASCII chart using gnuplot
+  x.termplot!
+
   # generate JSON output
   x.json! 'chart_array_simple.json'
 

@@ -62,6 +62,10 @@ module Benchmark
         # if nil, do not generate data
         # else string is name of file to write data out to
         @csv_file = nil
+
+        # whether to generate a plot in the terminal
+        # using gnuplot
+        @term_plot = false
       end
 
 
@@ -79,6 +83,10 @@ module Benchmark
 
       def chart! filename='chart.html'
         @chart_file = filename
+      end
+
+      def termplot!
+        @term_plot = true
       end
 
       def json! filename='data.json'
@@ -153,6 +161,7 @@ module Benchmark
         generate_json
         generate_csv
         generate_chart
+        generate_termplot
       end
 
       def generate_json
@@ -194,6 +203,13 @@ module Benchmark
           f.write template.result(binding)
         end
 
+      end
+
+      def generate_termplot
+        return unless @term_plot
+
+        @plot = TermPlot.new @full_report.data, sizes
+        @plot.generate
       end
 
     end

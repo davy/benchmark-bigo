@@ -4,6 +4,7 @@ Changelog
 Master
 -------------------------
 
+* Added terminal chart via gnuplot
 * Added constant line to comparison charts
 * Interface changes
     * Remove exponential incrementer
