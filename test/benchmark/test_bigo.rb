@@ -69,7 +69,7 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_equal "sleep 450", sleep_rep[2].label
 
     assert_equal 20, sleep_rep[0].iterations
-    assert_in_delta 20.0, sleep_rep[0].ips, 0.4
+    assert_in_delta 20.0, sleep_rep[0].ips, 0.6
 
     assert_equal 4, sleep_rep[1].iterations
     assert_in_delta 4.0, sleep_rep[1].ips, 0.2
@@ -111,7 +111,7 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_equal "sleep 450", sleep_rep[2].label
 
     assert_equal 20, sleep_rep[0].iterations
-    assert_in_delta 20.0, sleep_rep[0].ips, 0.4
+    assert_in_delta 20.0, sleep_rep[0].ips, 0.6
 
     assert_equal 4, sleep_rep[1].iterations
     assert_in_delta 4.0, sleep_rep[1].ips, 0.2

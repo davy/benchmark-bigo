@@ -45,9 +45,9 @@ Benchmark.bigo do |x|
 
   # report takes a label and a block.
   # block is passed in the generated object and the size of that object
-  x.report("#at") {|generated, size| generated.at rand(size) }
-  x.report("#index") {|generated, size| generated.index rand(size) }
-  x.report("#empty-index") {|generated, size| generated.index 'foo' }
+  x.report("#at")           {|array, size| array.at rand(size) }
+  x.report("#index")        {|array, size| array.index rand(size) }
+  x.report("#index-miss")   {|array, size| array.index (size + rand(size)) }
 
   # generate HTML chart using ChartKick
   x.chart! 'chart_array_simple.html'
@@ -55,6 +55,11 @@ Benchmark.bigo do |x|
   # for each report, create a comparison chart showing the report
   # and scaled series for O(log n), O(n), O(n log n), and O(n squared)
   x.compare!
+
+  # generate an ASCII chart using gnuplot
+  # works best with only one or two reports
+  # otherwise the lines often overlap each other
+  x.termplot!
 
   # generate JSON output
   x.json! 'chart_array_simple.json'

@@ -19,6 +19,7 @@ module Benchmark
         @entries[group_label].last
       end
 
+      # retrieve benchmark data for a particular label
       def data_for group_label
         @entries[group_label].collect do |report|
           size = report.label.split(' ').last.to_i
@@ -31,6 +32,7 @@ module Benchmark
         end
       end
 
+      # retrieve a summary of data for the benchmark report
       def data
         @entries.keys.map do |k|
           key_data = data_for(k)

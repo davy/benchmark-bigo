@@ -4,8 +4,9 @@ module Benchmark
     class Chart
 
       TYPES = [:const, :logn, :n, :nlogn, :n_sq]
+      attr_accessor :sample_size
 
-      def initialize(report_data, sizes)
+      def initialize report_data, sizes
         @data = report_data.freeze
         @sizes = sizes.freeze
 
@@ -21,8 +22,8 @@ module Benchmark
       def generate config={}
 
         charts = [ { name: 'Growth Chart',
-                    data: @data,
-                    opts: opts_for(@data) } ]
+                     data: @data,
+                     opts: opts_for(@data) } ]
 
         if config[:compare]
           for entry_data in @data
@@ -46,6 +47,7 @@ module Benchmark
         light_green = "#7bc545"
         med_blue = "#0883b2"
         yellow = "#ffaa00"
+        teal = "#00c7c3"
 
         {
           discrete: true,
@@ -54,7 +56,7 @@ module Benchmark
           min: (min * 0.8).floor,
           max: (max * 1.2).ceil,
           library: {
-            colors: [orange, purple, light_green, med_blue, yellow],
+            colors: [orange, purple, light_green, med_blue, yellow, teal],
             xAxis: {type: 'linear', title: {text: "Size"}},
             yAxis: {type: 'linear', title: {text: "Microseconds per Iteration"}}
           }
@@ -126,18 +128,18 @@ module Benchmark
       def factor_for type, sample
         case type
         when :const
-          sample
+          sample.to_f
         when :logn
-          sample/Math.log10(@sample_size)
+          sample.to_f/Math.log10(@sample_size)
 
         when :n
-          sample/@sample_size
+          sample.to_f/@sample_size
 
         when :nlogn
-          sample/(@sample_size * Math.log10(@sample_size))
+          sample.to_f/(@sample_size * Math.log10(@sample_size))
 
         when :n_sq
-          sample/(@sample_size * @sample_size)
+          sample.to_f/(@sample_size * @sample_size)
         end
       end
 
