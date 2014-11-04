@@ -194,6 +194,45 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_equal (0...100).to_a, job.list.first.generated.sort
   end
 
+  def test_generate_string
+
+    job = Benchmark::BigO::Job.new({:suite => nil,
+                                    :quiet => true})
+
+    job.generate :string
+
+    job.report('test') {|string, size| string[rand(size)] }
+
+    # should create 10 job entries
+    assert_equal 10, job.list.size
+
+    # the generated object should be a String
+    assert String === job.list.first.generated
+
+    # the String should have length 100
+    assert_equal 200, job.list.first.generated.length
+  end
+
+  def test_generate_size
+    job = Benchmark::BigO::Job.new({:suite => nil,
+                                    :quiet => true})
+
+    job.generate :size
+
+    job.report('test') {|size, _| size.to_i }
+
+    # should create 10 job entries
+    assert_equal 10, job.list.size
+
+    # the generated object should be an Integer
+    assert Integer === job.list.first.generated
+
+    # the Integer should be the size
+    assert_equal 100, job.list.first.generated
+    assert_equal 1000, job.list[-1].generated
+
+  end
+
   def test_step
     job = Benchmark::BigO::Job.new({:suite => nil,
                                     :quiet => true})
@@ -206,5 +245,4 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_equal 32, job.step(1)
     assert_equal 42, job.step(2)
   end
-
 end
