@@ -36,5 +36,8 @@ report = Benchmark.bigo do |x|
   # generate CSV output
   x.csv! 'chart_array_simple.csv'
 
+  # generate an ASCII chart using gnuplot
+  # works best with only one or two reports
+  # otherwise the lines often overlap each other
   x.termplot!
 end
