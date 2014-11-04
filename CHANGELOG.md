@@ -4,6 +4,8 @@ Changelog
 Master
 -------------------------
 
+* Add String generator
+* Add size generator
 * Added terminal chart via gnuplot
 * Added constant line to comparison charts
 * Interface changes
