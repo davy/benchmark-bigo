@@ -22,8 +22,8 @@ module Benchmark
       def generate config={}
 
         charts = [ { name: 'Growth Chart',
-                    data: @data,
-                    opts: opts_for(@data) } ]
+                     data: @data,
+                     opts: opts_for(@data) } ]
 
         if config[:compare]
           for entry_data in @data
@@ -47,6 +47,7 @@ module Benchmark
         light_green = "#7bc545"
         med_blue = "#0883b2"
         yellow = "#ffaa00"
+        teal = "#00c7c3"
 
         {
           discrete: true,
@@ -55,7 +56,7 @@ module Benchmark
           min: (min * 0.8).floor,
           max: (max * 1.2).ceil,
           library: {
-            colors: [orange, purple, light_green, med_blue, yellow],
+            colors: [orange, purple, light_green, med_blue, yellow, teal],
             xAxis: {type: 'linear', title: {text: "Size"}},
             yAxis: {type: 'linear', title: {text: "Microseconds per Iteration"}}
           }
