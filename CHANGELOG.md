@@ -1,7 +1,7 @@
 Changelog
 =========
 
-Master
+1.0.0 (Current release)
 -------------------------
 
 * Add String generator
@@ -16,7 +16,7 @@ Master
     * Add min_size
     * Add step_size
 
-0.1.0 (Current release)
+0.1.0
 -------------------------
 
 * Update interface to correctly describe exponential incrementer

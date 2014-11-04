@@ -1,8 +1,8 @@
 module Benchmark
   module BigO
     class Version
-      MAJOR = 0
-      MINOR = 1
+      MAJOR = 1
+      MINOR = 0
       PATCH = 0
 
       def self.to_s
