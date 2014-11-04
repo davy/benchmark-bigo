@@ -1,3 +1,5 @@
+require 'linefit'
+
 module Benchmark
 
   module BigO
@@ -63,13 +65,45 @@ module Benchmark
         }
       end
 
-      def comparison_for data
-        sample = data[:data][@sample_size]
+      def comparison_for data_set
+        sample = data_set[:data][@sample_size]
 
-        comparison = [data]
+        comparison = [data_set]
 
         TYPES.each do |type|
-          comparison << generate_data_for(type, sample)
+          case type
+          when :const
+            b, m = calculate_coefficients :const, data_set
+            data = generate_linear_data_from b, m
+            raise unless m == 0
+            comparison << { name: "Constant  y = #{b}", data: data }
+
+          when :n
+            b, m = calculate_coefficients :linear, data_set
+            data = generate_linear_data_from b, m
+            comparison << { name: "Linear y = #{m}*x + #{b}", data: data }
+
+          when :logn
+            b, m = calculate_coefficients :log, data_set
+            data = generate_log_data_from b, m
+            comparison << { name: "Log(N) y = #{m}*log(x) + #{b}", data: data }
+
+          when :nlogn
+            b, m = calculate_coefficients :nlog, data_set
+            data = generate_nlog_data_from b, m
+            comparison << { name: "N*Log(N) y = #{m}*x*log(x) + #{b}", data: data }
+
+
+          when :n_sq
+            b, m = calculate_coefficients :square, data_set
+            data = generate_squared_data_from b, m
+            comparison << { name: "N^2 y = #{m}*x^2 + #{b}", data: data }
+
+          end
+
+          if b != 0 && [:n, :logn, :nlogn].include?(type)
+            comparison << generate_data_for(type, sample)
+          end
         end
 
         comparison
@@ -82,23 +116,24 @@ module Benchmark
         # the values are the generated data for this type of comparison
         data = Hash[ @sizes.map {|n| [n, data_generator(type, n, sample) ] } ]
 
-        { name: title_for(type), data: data }
+        #{ name: title_for(type) + ": Factor=#{sprintf("%.1g", factor_for(type, sample))}", data: data }
+        { name: title_for(type, factor_for(type, sample)), data: data }
 
       end
 
-      def title_for type
+      def title_for type, factor
 
         case type
         when :const
-          'const'
+          "Constant: y = #{factor}"
         when :logn
-          'log n'
+          "Log(N) y = #{factor}*log(x)"
         when :n
-          'n'
+          "Linear y = #{factor}*x"
         when :nlogn
-          'n log n'
+          "N*Log(N) y = #{factor}*x*log(x)"
         when :n_sq
-          'n squared'
+          "N^2 y = #{factor}*x^2"
         end
 
       end
@@ -124,21 +159,84 @@ module Benchmark
         end
       end
 
+      def get_y data
+        data[:data].collect{|k,v| v }
+      end
+
+      def generate_log_data_from b, m
+        @sizes.each_with_object({}) do |size, d|
+          d[size] = m * Math.log10(size) + b
+        end
+      end
+
+      def generate_linear_data_from b, m
+        @sizes.each_with_object({}) do |size, d|
+          d[size] = m * size + b
+        end
+      end
+
+      def generate_nlog_data_from b, m
+        @sizes.each_with_object({}) do |size, d|
+          d[size] = m * size * Math.log10(size) + b
+        end
+      end
+
+      def generate_squared_data_from b, m
+        @sizes.each_with_object({}) do |size, d|
+          d[size] = m * size * size + b
+        end
+      end
+
+      def calculate_coefficients type, data
+        y = get_y data
+
+        if type == :const
+          return y.first, 0
+        end
+
+        lf = LineFit.new
+
+        case type
+        when :linear
+          lf.setData(@sizes, y)
+        when :log
+          lf.setData(@sizes.map{|s| Math.log10(s) }, y)
+        when :nlog
+          lf.setData(@sizes.map{|s| s*Math.log10(s) }, y)
+        when :square
+          lf.setData(@sizes.map{|s| s*s }, y)
+        end
+
+        b, m = lf.coefficients
+
+        # reset if obviously wrong
+        if !lf.regress              ||   # couldn't do a regression
+           m.nil? || m <= 0.00001   ||   # can't have 0 or negative slope
+           b.abs > y.first          ||   # if b is significantly overcorrecting then that's not good
+           lf.sigma > 2.0                # if the sigma is really big
+          m = factor_for type, y.first
+          b = 0
+        end
+
+        [ b, m ]
+      end
+
+
       # calculate the scaling factor for the given type and sample using sample_size
       def factor_for type, sample
         case type
         when :const
           sample.to_f
-        when :logn
+        when :logn, :log
           sample.to_f/Math.log10(@sample_size)
 
-        when :n
+        when :n, :linear
           sample.to_f/@sample_size
 
-        when :nlogn
+        when :nlogn, :nlog
           sample.to_f/(@sample_size * Math.log10(@sample_size))
 
-        when :n_sq
+        when :n_sq, :square
           sample.to_f/(@sample_size * @sample_size)
         end
       end
