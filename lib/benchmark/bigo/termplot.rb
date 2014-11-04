@@ -45,7 +45,7 @@ class Benchmark::BigO::TermPlot
 
     cmds = []
     cmds << "set term dumb"
-    cmds << "set key reverse Left outside"
+    cmds << "set key top left vertical inside width 3"
 
     data_idx = 0
 
