@@ -85,6 +85,10 @@ module Benchmark
         @chart_file = filename
       end
 
+      def compare?
+        @compare
+      end
+
       def termplot!
         @term_plot = true
       end
