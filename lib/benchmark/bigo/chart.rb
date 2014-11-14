@@ -3,7 +3,7 @@ module Benchmark
   module BigO
     class Chart
 
-      TYPES = [:const, :logn, :n, :nlogn, :n_sq]
+      TYPES = [:const, :logn, :n, :nlogn, :n_sq, :poly]
       attr_accessor :sample_size
 
       def initialize report_data, sizes
@@ -99,9 +99,13 @@ module Benchmark
           'n log n'
         when :n_sq
           'n squared'
+        when :poly
+          'polynomial'
         end
 
       end
+
+      def poly n; (1...n).inject(2){|i, v| i*2}; end
 
       def data_generator type, n, sample
         factor = factor_for(type, sample)
@@ -120,6 +124,9 @@ module Benchmark
 
         when :n_sq
           n * n * factor
+
+        when :poly
+          poly(n) * factor
 
         end
       end
@@ -140,6 +147,9 @@ module Benchmark
 
         when :n_sq
           sample.to_f/(@sample_size * @sample_size)
+
+        when :poly
+          sample.to_f/poly(@sample_size)
         end
       end
 
