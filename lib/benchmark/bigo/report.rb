@@ -11,11 +11,11 @@ module Benchmark
         @entries = {}
       end
 
-      def add_entry label, microseconds, iters, ips, ips_sd, measurement_cycle
+      def add_entry label, microseconds, iters, ips, measurement_cycle
         group_label = label.split(' ').first
 
         @entries[group_label] ||= []
-        @entries[group_label] << Benchmark::IPS::Report::Entry.new(label, microseconds, iters, ips, ips_sd, measurement_cycle)
+        @entries[group_label] << Benchmark::IPS::Report::Entry.new(label, microseconds, iters, ips, measurement_cycle)
         @entries[group_label].last
       end
 
