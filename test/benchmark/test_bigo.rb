@@ -32,7 +32,7 @@ class TestBenchmarkBigo < MiniTest::Test
 
       iterations = 1000.0 / size
       assert_equal iterations.ceil, rep[i].iterations
-      assert_in_delta iterations, rep[i].ips, 0.4
+      assert_in_delta iterations, rep[i].ips, iterations*0.1
     end
   end
 
@@ -68,8 +68,8 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_equal "sleep 250", sleep_rep[1].label
     assert_equal "sleep 450", sleep_rep[2].label
 
-    assert_equal 20, sleep_rep[0].iterations
-    assert_in_delta 20.0, sleep_rep[0].ips, 0.6
+    assert_in_delta 20.0, sleep_rep[0].iterations, 1.0
+    assert_in_delta 20.0, sleep_rep[0].ips, 1.4
 
     assert_equal 4, sleep_rep[1].iterations
     assert_in_delta 4.0, sleep_rep[1].ips, 0.2
@@ -110,8 +110,8 @@ class TestBenchmarkBigo < MiniTest::Test
     assert_equal "sleep 250", sleep_rep[1].label
     assert_equal "sleep 450", sleep_rep[2].label
 
-    assert_equal 20, sleep_rep[0].iterations
-    assert_in_delta 20.0, sleep_rep[0].ips, 0.6
+    assert_in_delta 20.0, sleep_rep[0].iterations, 1.0
+    assert_in_delta 20.0, sleep_rep[0].ips, 1.4
 
     assert_equal 4, sleep_rep[1].iterations
     assert_in_delta 4.0, sleep_rep[1].ips, 0.2
@@ -119,7 +119,7 @@ class TestBenchmarkBigo < MiniTest::Test
 
   def test_bigo_generate_json
     json_file = Tempfile.new 'data.json'
-    report = Benchmark.bigo do |x|
+    Benchmark.bigo do |x|
       x.config(:time => 1, :warmup => 1, :steps => 2)
       x.generate :array
 
@@ -140,7 +140,7 @@ class TestBenchmarkBigo < MiniTest::Test
 
   def test_bigo_generate_csv
     csv_file = Tempfile.new 'data.csv'
-    report = Benchmark.bigo do |x|
+    Benchmark.bigo do |x|
       x.config(:time => 1, :warmup => 1, :steps => 2)
       x.generate :array
 
@@ -157,7 +157,7 @@ class TestBenchmarkBigo < MiniTest::Test
 
   def test_bigo_generate_chart
     chart_file = Tempfile.new 'data.html'
-    report = Benchmark.bigo do |x|
+    Benchmark.bigo do |x|
       x.config(:time => 1, :warmup => 1, :steps => 2)
       x.generate :array
 
