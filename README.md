@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/davy/benchmark-bigo.png)](http://travis-ci.org/davy/benchmark-bigo)
+[![Build Status](https://travis-ci.org/davy/benchmark-bigo.svg?branch=master)](https://travis-ci.org/davy/benchmark-bigo)
 
 # benchmark-bigo
 
